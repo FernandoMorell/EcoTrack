@@ -15,8 +15,8 @@ export const authController = {
     const { name, password } = req.body
 
     try {
-      const result = await UserModel.loginUser(name, password)
-      res.status(200).json(result)
+      const { accesstoken, refreshToken } = await UserModel.loginUser(name, password)
+      res.status(200).json({ accesstoken, refreshToken })
     } catch (err) {
       res.status(401).json({ error: err.message })
     }
@@ -28,6 +28,19 @@ export const authController = {
       res.status(200).json(result)
     } catch (err) {
       res.status(500).json({ error: err.message })
+    }
+  },
+
+  refreshToken: async (req, res) => {
+    try {
+      const { token } = req.body
+      if (!token) return res.status(401).json({ error: 'No token' })
+
+      const accessToken = await UserModel.refreshToken(token)
+
+      return res.status(200).json({ accessToken })
+    } catch (err) {
+      return res.status(403).json({ error: 'Token inválido' })
     }
   }
 }

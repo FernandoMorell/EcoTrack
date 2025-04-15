@@ -9,4 +9,6 @@ usersRouter.post('/logout', authController.logoutUser)
 
 usersRouter.post('/register', authController.registerUser)
 
+usersRouter.post('/refresh', authController.refreshToken)
+
 export default usersRouter

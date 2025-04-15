@@ -12,11 +12,15 @@ export class UserModel {
     const passwordMatch = await bcrypt.compare(password, user.password)
     if (!passwordMatch) throw new Error('Contraseña incorrecta\n')
 
-    const token = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET, {
+    const accesstoken = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET, {
       expiresIn: '15m'
     })
 
-    return { token }
+    const refreshToken = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_REFRESH_SECRET, {
+      expiresIn: '7d'
+    })
+
+    return { accesstoken, refreshToken }
   }
 
   static async registerUser (name, password) {
@@ -34,5 +38,18 @@ export class UserModel {
   static async logoutUser () {
     // TO DO: Implementar la lógica de cierre de sesión en Frontend
     return { message: 'Sesión cerrada correctamente (simulado)\n' }
+  }
+
+  static async refreshToken (token) {
+    await connectDB()
+
+    const user = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
+    if (!user) throw new Error('Token inválido\n')
+
+    const accesstoken = jwt.sign({ id: user.id, name: user.name }, process.env.JWT_SECRET, {
+      expiresIn: '15m'
+    })
+
+    return accesstoken
   }
 }
