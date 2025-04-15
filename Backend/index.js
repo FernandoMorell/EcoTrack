@@ -2,6 +2,7 @@ import express, { json } from 'express'
 import cors from 'cors'
 import usersRouter from './routes/users.js'
 import dotenv from 'dotenv'
+
 const app = express()
 const PORT = 3000
 
