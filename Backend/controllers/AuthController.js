@@ -1,4 +1,4 @@
-import { UserModel } from '../models/users.js'
+import { UserModel } from '../models/Users.js'
 
 export const authController = {
   registerUser: async (req, res) => {
