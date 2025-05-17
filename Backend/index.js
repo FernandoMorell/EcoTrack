@@ -2,6 +2,7 @@ import express, { json } from 'express'
 import cors from 'cors'
 import usersRouter from './routes/users.js'
 import ingresosRouter from './routes/ingresos.js'
+import gastosFijosRouter from './routes/GastosFijos.js'
 import dotenv from 'dotenv'
 
 const app = express()
@@ -20,6 +21,8 @@ app.get('/', (req, res) => {
 app.use('/auth', usersRouter)
 
 app.use('/ingresos', ingresosRouter)
+
+app.use('/gastosfijos', gastosFijosRouter)
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en: http://localhost:${PORT}`)
