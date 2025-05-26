@@ -1,4 +1,4 @@
-import InfoMes from '../schemas/InfoMes'
+import InfoMes from '../schemas/InfoMes.js'
 import connectDB from '../db.js'
 
 export class InfoMesModel {

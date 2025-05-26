@@ -1,4 +1,4 @@
-import Ingreso from '../schemas/Ingreso'
+import Ingreso from '../schemas/Ingreso.js'
 import connectDB from '../db.js'
 
 export class IngresoModel {

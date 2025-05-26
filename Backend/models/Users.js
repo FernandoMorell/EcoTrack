@@ -13,7 +13,7 @@ export class UserModel {
     if (!passwordMatch) throw new Error('Contraseña incorrecta\n')
 
     const accesstoken = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET, {
-      expiresIn: '15m'
+      expiresIn: '60m'
     })
 
     const refreshToken = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_REFRESH_SECRET, {

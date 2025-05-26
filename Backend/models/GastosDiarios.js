@@ -1,4 +1,4 @@
-import GastoDiario from '../schemas/GastoDiario'
+import GastoDiario from '../schemas/GastoDiario.js'
 import connectDB from '../db.js'
 
 export class GastoDiarioModel {

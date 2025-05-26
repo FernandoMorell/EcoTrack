@@ -1,15 +1,8 @@
-POST http://localhost:3000/auth/login
-Content-Type: "application/json"
+//REGISTER
+curl -X POST http://localhost:3000/auth/register -H "Content-Type: application/json" -d '{"name":"admin","password":"admin"}'
 
-{
-    "name": "admin",
-    "password": "admin"
-}
+//LOGIN
+curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d '{"name":"admin","password":"admin"}'
 
-POST http://localhost:3000/auth/register
-Content-Type: application/json
-
-{
-    "name": "admin",
-    "password": "admin"
-}
+//TOKEN
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODI5MDMxNiwiZXhwIjoxNzQ4MjkzOTE2fQ.Ts_P3W2NJUF1Fmor96cEbkyxGkawZFHF0fuYd2naq-c

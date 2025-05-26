@@ -1,4 +1,4 @@
-import { InfoMesModel } from '../models/InfoMes'
+import { InfoMesModel } from '../models/InfoMes.js'
 
 export const InfoMesController = {
   getInfoMes: async (req, res) => {

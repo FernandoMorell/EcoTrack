@@ -1,4 +1,4 @@
-import { GastoDiarioModel } from '../models/GastosDiarios'
+import { GastoDiarioModel } from '../models/GastosDiarios.js'
 
 export const GastosDiariosController = {
   getGastosDiarios: async (req, res) => {

@@ -1,4 +1,4 @@
-import { GastoFijoModel } from '../models/GastosFijos'
+import { GastoFijoModel } from '../models/GastosFijos.js'
 
 export const GastosFijosController = {
   getGastosFijos: async (req, res) => {

@@ -1,4 +1,4 @@
-import { IngresoModel } from '../models/Ingresos'
+import { IngresoModel } from '../models/Ingresos.js'
 
 export const ingresosController = {
   getIngresos: async (req, res) => {

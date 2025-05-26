@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import { InfoMesController } from '../controllers/InfoMesController.js'
-import { authMiddleware } from '../middlewares/authMiddleware.js'
+import { verificarToken } from '../middleware/authMiddleware.js'
 
 const InfoMesRouter = Router()
 // Middleware para verificar el token de acceso
-InfoMesRouter.use(authMiddleware)
+InfoMesRouter.use(verificarToken)
 // Obtener información del mes para un usuario específico
 InfoMesRouter.get('/:userId/:mes', InfoMesController.getInfoMes)
 // Crear información del mes para un usuario específico

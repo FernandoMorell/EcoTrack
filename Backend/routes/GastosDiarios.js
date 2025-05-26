@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import { GastosDiariosController } from '../controllers/GastosDiariosController.js'
-import { authMiddleware } from '../middlewares/authMiddleware.js'
+import { verificarToken } from '../middleware/authMiddleware.js'
 
 const GastosDiariosRouter = Router()
 // Middleware para verificar el token de acceso
-GastosDiariosRouter.use(authMiddleware)
+GastosDiariosRouter.use(verificarToken)
 // Obtener todos los GastosDiarios del usuario
 GastosDiariosRouter.get('/:userId', GastosDiariosController.getGastosDiarios)
 // Crear un nuevo GastoDiario

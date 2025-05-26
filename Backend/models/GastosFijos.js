@@ -1,4 +1,4 @@
-import GastoFijo from '../schemas/GastoFijo'
+import GastoFijo from '../schemas/GastoFijo.js'
 import connectDB from '../db.js'
 
 export class GastoFijoModel {
