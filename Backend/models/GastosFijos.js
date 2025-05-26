@@ -22,7 +22,7 @@ export class GastoFijoModel {
       throw new Error('La cantidad debe ser mayor que cero\n')
     }
 
-    const newGastoFijo = new GastoFijo(nombre, cantidad, tipo, user)
+    const newGastoFijo = new GastoFijo({ nombre, cantidad, tipo, user })
     await newGastoFijo.save()
     return newGastoFijo
   }

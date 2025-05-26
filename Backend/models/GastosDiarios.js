@@ -23,7 +23,7 @@ export class GastoDiarioModel {
       throw new Error('La cantidad debe ser mayor que cero\n')
     }
 
-    const newGastoDiario = new GastoDiario(nombre, cantidad, tipo, fecha, user)
+    const newGastoDiario = new GastoDiario({ nombre, cantidad, tipo, fecha, user })
     await newGastoDiario.save()
     return newGastoDiario
   }

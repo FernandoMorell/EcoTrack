@@ -22,7 +22,7 @@ export class IngresoModel {
       throw new Error('La cantidad debe ser mayor que cero\n')
     }
 
-    const newIngreso = new Ingreso(nombre, cantidad, tipo, user)
+    const newIngreso = new Ingreso({ nombre, cantidad, tipo, user })
     await newIngreso.save()
     return newIngreso
   }
