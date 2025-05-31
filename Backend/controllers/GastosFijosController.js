@@ -3,6 +3,9 @@ import { GastoFijoModel } from '../models/GastosFijos.js'
 export const GastosFijosController = {
   getGastosFijos: async (req, res) => {
     const { userId } = req.params
+    if (!userId) {
+      return res.status(400).json({ error: 'El ID de usuario es obligatorio' })
+    }
     try {
       const GastosFijos = await GastoFijoModel.getGastosFijos(userId)
       res.status(200).json(GastosFijos)
@@ -13,6 +16,9 @@ export const GastosFijosController = {
 
   createGastoFijo: async (req, res) => {
     const { nombre, cantidad, user } = req.body
+    if (!nombre || !cantidad || !user) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' })
+    }
     try {
       const newGastoFijo = await GastoFijoModel.createGastoFijo(nombre, cantidad, user)
       res.status(201).json(newGastoFijo)
@@ -24,6 +30,9 @@ export const GastosFijosController = {
   updateGastoFijo: async (req, res) => {
     const { id } = req.params
     const GastoFijo = req.body
+    if (!id || !GastoFijo) {
+      return res.status(400).json({ error: 'El ID y los datos del gasto fijo son obligatorios' })
+    }
     try {
       const updatedGastoFijo = await GastoFijoModel.updateGastoFijo(id, GastoFijo)
       res.status(200).json(updatedGastoFijo)
@@ -34,6 +43,9 @@ export const GastosFijosController = {
 
   deleteGastoFijo: async (req, res) => {
     const { id } = req.params
+    if (!id) {
+      return res.status(400).json({ error: 'El ID del gasto fijo es obligatorio' })
+    }
     try {
       const result = await GastoFijoModel.deleteGastoFijo(id)
       res.status(200).json(result)

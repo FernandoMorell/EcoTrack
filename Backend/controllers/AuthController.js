@@ -3,6 +3,9 @@ import { UserModel } from '../models/Users.js'
 export const authController = {
   registerUser: async (req, res) => {
     const { name, password } = req.body
+    if (!name || !password) {
+      return res.status(400).json({ error: 'Nombre y contraseña son requeridos' })
+    }
     try {
       const result = await UserModel.registerUser(name, password)
       res.status(201).json(result)
@@ -13,7 +16,9 @@ export const authController = {
 
   loginUser: async (req, res) => {
     const { name, password } = req.body
-
+    if (!name || !password) {
+      return res.status(400).json({ error: 'Nombre y contraseña son requeridos' })
+    }
     try {
       const { accesstoken, refreshToken } = await UserModel.loginUser(name, password)
       res.status(200).json({ accesstoken, refreshToken })

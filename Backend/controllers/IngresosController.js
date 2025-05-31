@@ -3,6 +3,9 @@ import { IngresoModel } from '../models/Ingresos.js'
 export const ingresosController = {
   getIngresos: async (req, res) => {
     const { userId } = req.params
+    if (!userId) {
+      return res.status(400).json({ error: 'El ID de usuario es obligatorio' })
+    }
     try {
       const ingresos = await IngresoModel.getIngresos(userId)
       res.status(200).json(ingresos)
@@ -13,6 +16,9 @@ export const ingresosController = {
 
   createIngreso: async (req, res) => {
     const { nombre, cantidad, user } = req.body
+    if (!nombre || !cantidad || !user) {
+      return res.status(400).json({ error: 'Todos los campos son obligatorios' })
+    }
     try {
       const newIngreso = await IngresoModel.createIngreso(nombre, cantidad, user)
       res.status(201).json(newIngreso)
@@ -24,6 +30,9 @@ export const ingresosController = {
   updateIngreso: async (req, res) => {
     const { id } = req.params
     const ingreso = req.body
+    if (!id || !ingreso) {
+      return res.status(400).json({ error: 'El ID y los datos del ingreso son obligatorios' })
+    }
     try {
       const updatedIngreso = await IngresoModel.updateIngreso(id, ingreso)
       res.status(200).json(updatedIngreso)
@@ -34,6 +43,9 @@ export const ingresosController = {
 
   deleteIngreso: async (req, res) => {
     const { id } = req.params
+    if (!id) {
+      return res.status(400).json({ error: 'El ID del ingreso es obligatorio' })
+    }
     try {
       const result = await IngresoModel.deleteIngreso(id)
       res.status(200).json(result)
