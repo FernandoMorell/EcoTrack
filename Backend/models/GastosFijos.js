@@ -27,20 +27,20 @@ export class GastoFijoModel {
     return newGastoFijo
   }
 
-  static async updateGastoFijo (id, GastoFijo) {
+  static async updateGastoFijo (id, _GastoFijo) {
     await connectDB()
 
-    const existingGastoFijo = await GastoFijo.findOne({ id })
+    const existingGastoFijo = await GastoFijo.findOne({ _id: id })
     if (!existingGastoFijo) throw new Error('GastoFijo no existe\n')
 
-    const updatedGastoFijo = await GastoFijo.findByIdAndUpdate(id, GastoFijo, { new: true })
+    const updatedGastoFijo = await GastoFijo.findByIdAndUpdate(id, _GastoFijo, { new: true })
     return updatedGastoFijo
   }
 
   static async deleteGastoFijo (id) {
     await connectDB()
 
-    const existingGastoFijo = await GastoFijo.findOne({ id })
+    const existingGastoFijo = await GastoFijo.findOne({ _id: id })
     if (!existingGastoFijo) throw new Error('GastoFijo no existe\n')
 
     await GastoFijo.findByIdAndDelete(id)

@@ -28,20 +28,20 @@ export class GastoDiarioModel {
     return newGastoDiario
   }
 
-  static async updateGastoDiario (id, GastoDiario) {
+  static async updateGastoDiario (id, _GastoDiario) {
     await connectDB()
 
-    const existingGastoDiario = await GastoDiario.findOne({ id })
+    const existingGastoDiario = await GastoDiario.findOne({ _id: id })
     if (!existingGastoDiario) throw new Error('GastoDiario no existe\n')
 
-    const updatedGastoDiario = await GastoDiario.findByIdAndUpdate(id, GastoDiario, { new: true })
+    const updatedGastoDiario = await GastoDiario.findByIdAndUpdate(id, _GastoDiario, { new: true })
     return updatedGastoDiario
   }
 
   static async deleteGastoDiario (id) {
     await connectDB()
 
-    const existingGastoDiario = await GastoDiario.findOne({ id })
+    const existingGastoDiario = await GastoDiario.findOne({ _id: id })
     if (!existingGastoDiario) throw new Error('GastoDiario no existe\n')
 
     await GastoDiario.findByIdAndDelete(id)

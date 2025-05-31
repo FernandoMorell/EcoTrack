@@ -5,4 +5,39 @@ curl -X POST http://localhost:3000/auth/register -H "Content-Type: application/j
 curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d '{"name":"admin","password":"admin"}'
 
 //TOKEN
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODI5MDMxNiwiZXhwIjoxNzQ4MjkzOTE2fQ.Ts_P3W2NJUF1Fmor96cEbkyxGkawZFHF0fuYd2naq-c
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0
+//GET INGRESOS
+curl -X GET http://localhost:3000/ingresos/67feae5f8e039be6fc1f45a9 -H "x-auth-token: eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0"
+
+//CREATE INGRESO
+curl -X POST http://localhost:3000/ingresos -H "Content-Type: application/json" -H "x-auth-token: eeyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0" -d '{"nombre":"Ingreso2","cantidad":1000,"tipo":"Mensual","user":"67feae5f8e039be6fc1f45a9"}'
+
+//UPDATE INGRESO
+curl -X PUT http://localhost:3000/ingresos/6834cb26da8f5d1e73792eb6 -H "Content-Type: application/json" -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0" -d '{"nombre":"Ingreso3","cantidad":2000,"tipo":"Mensual","user":"67feae5f8e039be6fc1f45a9"}'
+
+//DELETE INGRESO
+curl -X DELETE http://localhost:3000/ingresos/6839da912066d1015cd5b2ba -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0"
+
+//GET GASTOS FIJOS
+curl -X GET http://localhost:3000/gastosfijos/67feae5f8e039be6fc1f45a9 -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0"
+
+//CREATE GASTOS FIJOS
+curl -X POST http://localhost:3000/gastosfijos -H "Content-Type: application/json" -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0" -d '{"nombre":"Gasto1","cantidad":100,"tipo":"Mensual","user":"67feae5f8e039be6fc1f45a9"}'
+
+//UPDATE GASTOS FIJOS
+curl -X PUT http://localhost:3000/gastosfijos/683b05981f9a9b830f5b6534 -H "Content-Type: application/json" -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0" -d '{"nombre":"Gasto2","cantidad":100,"tipo":"Mensual","user":"67feae5f8e039be6fc1f45a9"}'
+
+//DELETE GASTOS FIJOS
+curl -X DELETE http://localhost:3000/gastosfijos/683b05981f9a9b830f5b6534 -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0"
+
+//GET GASTOS DIARIOS
+curl -X GET http://localhost:3000/gastosdiarios/67feae5f8e039be6fc1f45a9?fecha=2025-05-30 -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0"
+
+//CREATE GASTOS DIARIOS
+curl -X POST http://localhost:3000/gastosdiarios -H "Content-Type: application/json" -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0" -d '{"nombre":"Diario1","cantidad":10,"tipo":"Otros","fecha":"2025-05-30","user":"67feae5f8e039be6fc1f45a9"}'
+
+//UPDATE GASTOS DIARIOS
+curl -X PUT http://localhost:3000/gastosdiarios/683b079e5e92ee0a9103c12b -H "Content-Type: application/json" -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0" -d '{"nombre":"Diario2","cantidad":10,"tipo":"Otros","fecha":"2025-05-30","user":"67feae5f8e039be6fc1f45a9"}'
+
+//DELETE GASTOS DIARIOS
+curl -X DELETE http://localhost:3000/gastosdiarios/683b079e5e92ee0a9103c12b -H "x-auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZmVhZTVmOGUwMzliZTZmYzFmNDVhOSIsIm5hbWUiOiJhZG1pbiIsImlhdCI6MTc0ODY5Nzk2NSwiZXhwIjoxNzQ4NzAxNTY1fQ.AFkVX8WWmEt8f4PSYsX9Vnm3zbI1eKy0dyMWjfbF8C0"

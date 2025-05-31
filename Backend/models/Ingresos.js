@@ -30,7 +30,7 @@ export class IngresoModel {
   static async updateIngreso (id, ingreso) {
     await connectDB()
 
-    const existingIngreso = await Ingreso.findOne({ id })
+    const existingIngreso = await Ingreso.findOne({ _id: id })
     if (!existingIngreso) throw new Error('Ingreso no existe\n')
 
     const updatedIngreso = await Ingreso.findByIdAndUpdate(id, ingreso, { new: true })
@@ -40,7 +40,7 @@ export class IngresoModel {
   static async deleteIngreso (id) {
     await connectDB()
 
-    const existingIngreso = await Ingreso.findOne({ id })
+    const existingIngreso = await Ingreso.findOne({ _id: id })
     if (!existingIngreso) throw new Error('Ingreso no existe\n')
 
     await Ingreso.findByIdAndDelete(id)
