@@ -23,14 +23,25 @@ export class GastoFijoModel {
     return newGastoFijo
   }
 
-  static async updateGastoFijo (id, _GastoFijo) {
+  static async updateGastoFijo (id, { nombre, cantidad }) {
     await connectDB()
 
-    const existingGastoFijo = await GastoFijo.findOne({ _id: id })
+    const existingGastoFijo = await GastoFijo.findById(id)
     if (!existingGastoFijo) throw new Error('GastoFijo no existe\n')
 
-    const updatedGastoFijo = await GastoFijo.findByIdAndUpdate(id, _GastoFijo, { new: true })
-    return updatedGastoFijo
+    if (nombre !== undefined) {
+      const duplicate = await GastoFijo.findOne({ nombre, user: existingGastoFijo.user, _id: { $ne: id } })
+      if (duplicate) throw new Error('Ya existe un gasto fijo con ese nombre\n')
+      existingGastoFijo.nombre = nombre
+    }
+
+    if (cantidad !== undefined) {
+      if (cantidad <= 0) throw new Error('La cantidad debe ser mayor que cero\n')
+      existingGastoFijo.cantidad = cantidad
+    }
+
+    await existingGastoFijo.save()
+    return existingGastoFijo
   }
 
   static async deleteGastoFijo (id) {
