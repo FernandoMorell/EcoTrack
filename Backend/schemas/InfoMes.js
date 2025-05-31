@@ -16,9 +16,7 @@ const infoMesSchema = new mongoose.Schema({
     of: Number,
     required: true,
     default: () => ({
-      Mensual: 0,
-      Anual: 0,
-      Extraordinario: 0,
+      Fijo: 0,
       Ocio: 0,
       Comida: 0,
       Ropa: 0,

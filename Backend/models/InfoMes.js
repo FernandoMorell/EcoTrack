@@ -4,51 +4,52 @@ import connectDB from '../db.js'
 export class InfoMesModel {
   static async getInfoMes (userId, mes) {
     await connectDB()
-    const infoMes = await InfoMes.find({ userId, mes })
+    const infoMes = await InfoMes.findOne({ user: userId, mes })
     return infoMes
   }
 
-  static async createInfoMes (mes, ingresos, gastos, user) {
+  static async createInfoMes (mes, user) {
     await connectDB()
 
     const existingInfoMes = await InfoMes.findOne({ mes, user })
     if (existingInfoMes) throw new Error('Información del mes ya registrada\n')
 
-    const newInfoMes = new InfoMes({ mes, ingresos, gastos, user })
+    const newInfoMes = new InfoMes({ mes, user })
     await newInfoMes.save()
     return newInfoMes
   }
 
-  static async addGasto (id, gasto) {
+  static async accionGasto (id, gasto, accion) {
     await connectDB()
 
     const existingInfoMes = await InfoMes.findById(id)
     if (!existingInfoMes) throw new Error('Información del mes no existe\n')
-
-    if (!existingInfoMes.gastos.has(gasto.tipo)) {
-      throw new Error('Tipo de gasto inválido. Debe ser Mensual, Anual, Extraordinario, Ocio, Comida, Ropa u Otros\n')
+    if (accion !== 'add' && accion !== 'remove') {
+      throw new Error('Acción inválida. Debe ser "add" o "remove"\n')
     }
 
-    // Añadir el gasto al mapa de gastos
-    existingInfoMes.gastos.set(gasto.tipo, (existingInfoMes.gastos.get(gasto.tipo) || 0) + 1)
+    // Determinar tipo de gasto
+    const tipoGasto = gasto.tipo || 'Fijo' // Si no tiene tipo, es GastoFijo
+
+    const tiposPermitidos = ['Mensual', 'Anual', 'Extraordinario', 'Ocio', 'Comida', 'Ropa', 'Otros', 'Fijo']
+
+    if (!tiposPermitidos.includes(tipoGasto)) {
+      throw new Error(`Tipo de gasto inválido. Debe ser uno de: ${tiposPermitidos.join(', ')}\n`)
+    }
+
+    const cantidadActual = existingInfoMes.gastos.get(tipoGasto) || 0
+
+    if (accion === 'add') {
+      existingInfoMes.gastos.set(tipoGasto, cantidadActual + 1)
+    } else if (accion === 'remove') {
+      existingInfoMes.gastos.set(tipoGasto, Math.max(0, cantidadActual - 1))
+    }
+
     await existingInfoMes.save()
     return existingInfoMes
   }
 
-  static async deleteGasto (id, gasto) {
-    await connectDB()
-    const existingInfoMes = await InfoMes.findById(id)
-    if (!existingInfoMes) throw new Error('Información del mes no existe\n')
-    if (!existingInfoMes.gastos.has(gasto.tipo)) {
-      throw new Error('Tipo de gasto inválido. Debe ser Mensual, Anual, Extraordinario, Ocio, Comida, Ropa u Otros\n')
-    }
-    // Eliminar el gasto al mapa de gastos
-    existingInfoMes.gastos.set(gasto.tipo, (existingInfoMes.gastos.get(gasto.tipo) || 0) - 1)
-    await existingInfoMes.save()
-    return existingInfoMes
-  }
-
-  static async addIngreso (id, ingreso) {
+  static async accionIngreso (id, ingreso, accion) {
     await connectDB()
 
     const existingInfoMes = await InfoMes.findById(id)
@@ -56,24 +57,21 @@ export class InfoMesModel {
     if (ingreso.cantidad <= 0) {
       throw new Error('La cantidad del ingreso debe ser mayor que cero\n')
     }
-
-    // Añadir el ingtreso
-    existingInfoMes.ingresos += ingreso.cantidad
-    await existingInfoMes.save()
-    return existingInfoMes
-  }
-
-  static async deleteIngreso (id, ingreso) {
-    await connectDB()
-
-    const existingInfoMes = await InfoMes.findById(id)
-    if (!existingInfoMes) throw new Error('Información del mes no existe\n')
-    if (ingreso.cantidad <= 0) {
-      throw new Error('La cantidad del ingreso debe ser mayor que cero\n')
+    if (accion !== 'add' && accion !== 'remove') {
+      throw new Error('Acción inválida. Debe ser "add" o "remove"\n')
     }
 
-    // Eliminar el ingreso
-    existingInfoMes.ingresos -= ingreso.cantidad
+    if (accion === 'add') {
+      // Añadir el ingreso al mapa de ingresos
+      existingInfoMes.ingresos += ingreso.cantidad
+    }
+    if (accion === 'remove') {
+      // Eliminar el ingreso del mapa de ingresos
+      existingInfoMes.ingresos -= ingreso.cantidad
+      if (existingInfoMes.ingresos < 0) {
+        existingInfoMes.ingresos = 0 // Asegurarse de que no sea negativo
+      }
+    }
     await existingInfoMes.save()
     return existingInfoMes
   }

@@ -47,7 +47,7 @@ export class UserModel {
     if (!user) throw new Error('Token inválido\n')
 
     const accesstoken = jwt.sign({ id: user.id, name: user.name }, process.env.JWT_SECRET, {
-      expiresIn: '15m'
+      expiresIn: '60m'
     })
 
     return accesstoken
