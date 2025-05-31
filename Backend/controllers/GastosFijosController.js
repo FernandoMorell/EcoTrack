@@ -12,9 +12,9 @@ export const GastosFijosController = {
   },
 
   createGastoFijo: async (req, res) => {
-    const { nombre, cantidad, tipo, user } = req.body
+    const { nombre, cantidad, user } = req.body
     try {
-      const newGastoFijo = await GastoFijoModel.createGastoFijo(nombre, cantidad, tipo, user)
+      const newGastoFijo = await GastoFijoModel.createGastoFijo(nombre, cantidad, user)
       res.status(201).json(newGastoFijo)
     } catch (err) {
       res.status(400).json({ error: err.message })

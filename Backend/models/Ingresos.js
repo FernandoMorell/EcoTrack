@@ -8,21 +8,17 @@ export class IngresoModel {
     return ingresos
   }
 
-  static async createIngreso (nombre, cantidad, tipo, user) {
+  static async createIngreso (nombre, cantidad, user) {
     await connectDB()
 
     const existingIngreso = await Ingreso.findOne({ nombre, user })
     if (existingIngreso) throw new Error('Ingreso ya registrado\n')
 
-    if (tipo !== 'Mensual' && tipo !== 'Anual' && tipo !== 'Extraordinario') {
-      throw new Error('Tipo de ingreso inválido. Debe ser Mensual, Anual o Extraordinario\n')
-    }
-
     if (cantidad <= 0) {
       throw new Error('La cantidad debe ser mayor que cero\n')
     }
 
-    const newIngreso = new Ingreso({ nombre, cantidad, tipo, user })
+    const newIngreso = new Ingreso({ nombre, cantidad, user })
     await newIngreso.save()
     return newIngreso
   }

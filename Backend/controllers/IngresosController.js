@@ -12,9 +12,9 @@ export const ingresosController = {
   },
 
   createIngreso: async (req, res) => {
-    const { nombre, cantidad, tipo, user } = req.body
+    const { nombre, cantidad, user } = req.body
     try {
-      const newIngreso = await IngresoModel.createIngreso(nombre, cantidad, tipo, user)
+      const newIngreso = await IngresoModel.createIngreso(nombre, cantidad, user)
       res.status(201).json(newIngreso)
     } catch (err) {
       res.status(400).json({ error: err.message })

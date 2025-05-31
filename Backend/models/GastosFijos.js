@@ -8,21 +8,17 @@ export class GastoFijoModel {
     return GastosFijos
   }
 
-  static async createGastoFijo (nombre, cantidad, tipo, user) {
+  static async createGastoFijo (nombre, cantidad, user) {
     await connectDB()
 
     const existingGastoFijo = await GastoFijo.findOne({ nombre, user })
     if (existingGastoFijo) throw new Error('GastoFijo ya registrado\n')
 
-    if (tipo !== 'Mensual' && tipo !== 'Anual' && tipo !== 'Extraordinario') {
-      throw new Error('Tipo de GastoFijo inválido. Debe ser Mensual, Anual o Extraordinario\n')
-    }
-
     if (cantidad <= 0) {
       throw new Error('La cantidad debe ser mayor que cero\n')
     }
 
-    const newGastoFijo = new GastoFijo({ nombre, cantidad, tipo, user })
+    const newGastoFijo = new GastoFijo({ nombre, cantidad, user })
     await newGastoFijo.save()
     return newGastoFijo
   }
