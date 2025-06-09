@@ -9,7 +9,7 @@ export default function Header() {
                 style={ styles.icon }
             />
             
-            <NavButton to="/congifuracion" text="Config" />
+            <NavButton to="Profile" text="Perfil" />
             
         </View>
         

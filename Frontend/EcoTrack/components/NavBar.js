@@ -1,13 +1,13 @@
 import { StyleSheet, View } from 'react-native';
-import NavButton from './NavButton.js';
+import NavButton from './NavButton';
 
 export default function NavBar() {
     return (
         <View style={styles.navBar}>
-            <NavButton to="/" text="Home" />
-            <NavButton to="/ingresos" text="About" />
-            <NavButton to="/gastos" text="Contact" />
-            <NavButton to="/notificaciones" text="Contact" />
+            <NavButton to="Home" text="Home" />
+            <NavButton to="Ingresos" text="Ingresos" />
+            <NavButton to="Gastos" text="Gastos" />
+            <NavButton to="Notificaciones" text="Notificaciones" />
         </View>
     );
 }

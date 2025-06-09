@@ -1,6 +1,14 @@
 import { View, StyleSheet } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
+import HomePage from './HomePage';
+import IngresosPage from './IngresosPage';
+import GastosPage from './GastosPage';
+import NotificacionesPage from './NotificacionesPage';
+import ProfilePage from './ProfilePage';
+
+const Stack = createNativeStackNavigator();
 
 export default function Layout() {
     return (
@@ -10,7 +18,18 @@ export default function Layout() {
             </View>
             
             <View style={styles.contentContainer}>
-                {/*Contenido de cada pagina*/}
+                <Stack.Navigator
+                    initialRouteName="Home"
+                    screenOptions={{
+                        headerShown: false
+                    }}
+                >
+                    <Stack.Screen name="Home" component={HomePage} />
+                    <Stack.Screen name="Ingresos" component={IngresosPage} />
+                    <Stack.Screen name="Gastos" component={GastosPage} />
+                    <Stack.Screen name="Notificaciones" component={NotificacionesPage} />
+                    <Stack.Screen name="Profile" component={ProfilePage} />
+                </Stack.Navigator>
             </View>
             
             <View style={styles.navContainer}>
