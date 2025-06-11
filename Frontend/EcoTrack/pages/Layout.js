@@ -62,9 +62,8 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         flex: 1,
-        marginTop: 120, 
-        marginBottom: 60,
-        padding: 15,
+        marginTop: 65, 
+        marginBottom: 65,
     },
     navContainer: {
         position: 'absolute',

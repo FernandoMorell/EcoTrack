@@ -9,7 +9,7 @@ export default function Header() {
                 style={ styles.icon }
             />
             
-            <NavButton to="Profile" text="Perfil" />
+            <NavButton to="Profile" text="Perfil" nested={true} />
             
         </View>
         

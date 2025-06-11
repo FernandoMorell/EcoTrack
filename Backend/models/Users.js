@@ -15,21 +15,23 @@ export class UserModel {
     const accesstoken = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET, {
       expiresIn: '60m'
     })
-
     const refreshToken = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_REFRESH_SECRET, {
       expiresIn: '7d'
     })
 
-    return { accesstoken, refreshToken }
+    return { accesstoken, refreshToken, id: user._id }
   }
 
-  static async registerUser (name, password) {
+  static async registerUser (name, email, password) {
     await connectDB()
     const existingUser = await User.findOne({ name })
-    if (existingUser) throw new Error('Usuario ya registrado\n')
+    if (existingUser) {
+      if (existingUser.name === name) throw new Error('Nombre de usuario ya registrado\n')
+      if (existingUser.email === email) throw new Error('Email ya registrado\n')
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    const user = new User({ name, password: hashedPassword })
+    const user = new User({ name, email, password: hashedPassword })
     await user.save()
 
     return { message: 'Usuario registrado exitosamente\n' }

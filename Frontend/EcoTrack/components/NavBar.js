@@ -4,10 +4,10 @@ import NavButton from './NavButton';
 export default function NavBar() {
     return (
         <View style={styles.navBar}>
-            <NavButton to="Home" text="Home" />
-            <NavButton to="Ingresos" text="Ingresos" />
-            <NavButton to="Gastos" text="Gastos" />
-            <NavButton to="Notificaciones" text="Notificaciones" />
+            <NavButton to="Home" text="Home" nested={true} />
+            <NavButton to="Ingresos" text="Ingresos" nested={true} />
+            <NavButton to="Gastos" text="Gastos" nested={true} />
+            <NavButton to="Notificaciones" text="Notificaciones" nested={true} />
         </View>
     );
 }
