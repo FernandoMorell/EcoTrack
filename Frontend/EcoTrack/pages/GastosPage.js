@@ -8,7 +8,7 @@ import GastoFijoDetalle from '../components/GastoFijoDetalle';
 import GastoDiarioDetalle from '../components/GastoDiarioDetalle';
 import NuevoGastoFijoModal from '../components/NuevoGastoFijoModal';
 import NuevoGastoDiarioModal from '../components/NuevoGastoDiarioModal';
-import { gastosDiariosService, gastosFijosService } from '../services/ApiServices';
+import { gastosDiariosService, gastosFijosService, userService, notificacionesService } from '../services/ApiServices';
 
 export default function GastosPage() {
     const { user } = useAuth();
@@ -20,10 +20,17 @@ export default function GastosPage() {
     const [selectedGastoDiario, setSelectedGastoDiario] = useState(null);
     const [showNuevoGastoFijo, setShowNuevoGastoFijo] = useState(false);
     const [showNuevoGastoDiario, setShowNuevoGastoDiario] = useState(false);
+    const [limiteDiario, setLimiteDiario] = useState(0);
 
     useEffect(() => {
         loadGastos();
     }, []);
+
+    useEffect(() => {
+        if (user) {
+            cargarLimiteDiario();
+        }
+    }, [user]);
 
     const loadGastos = async () => {
         try {
@@ -35,6 +42,15 @@ export default function GastosPage() {
             setGastosDiarios(gastosDiariosResponse);
         } catch (error) {
             console.error('Error loading gastos:', error);
+        }
+    };
+
+    const cargarLimiteDiario = async () => {
+        try {
+            const data = await userService.getLimiteDiario(user.id);
+            setLimiteDiario(data.limiteDiario);
+        } catch (error) {
+            console.error('Error al cargar el límite diario:', error);
         }
     };
 
@@ -66,6 +82,31 @@ export default function GastosPage() {
         setSelectedGastoDiario(gasto);
     };
 
+    const checkLimiteDiario = async (nuevoGasto) => {
+        if (!limiteDiario) return false;
+        
+        const gastosDelDia = gastosDiarios.reduce((total, gasto) => total + gasto.cantidad, 0);
+        const totalConNuevoGasto = gastosDelDia + nuevoGasto;
+        
+        if (totalConNuevoGasto > limiteDiario) {            try {
+                await notificacionesService.createNotificacion({
+                    titulo: '¡Límite diario excedido!',
+                    mensaje: `Has superado tu límite diario de ${limiteDiario}€ el ${selectedDate.toLocaleDateString()}.`,
+                    user: user.id,
+                });
+                Alert.alert(
+                    'Advertencia',
+                    `Este gasto superará tu límite diario de ${limiteDiario}€`,
+                    [{ text: 'OK' }]
+                );
+            } catch (error) {
+                console.error('Error al crear la notificación:', error);
+            }
+            return false;
+        }
+        return false;
+    };
+
     const handleNuevoGastoFijo = async (gastoData) => {
         try {
             if (!user) return;
@@ -87,9 +128,10 @@ export default function GastosPage() {
             if (!user) {
                 Alert.alert('Error', 'No se pudo obtener la información del usuario');
                 return;
-            }
+            }            const formattedDate = selectedDate.toISOString().split('T')[0];
+            // Verificar el límite pero permitir la creación del gasto
+            await checkLimiteDiario(gastoData.cantidad);
 
-            const formattedDate = selectedDate.toISOString().split('T')[0];
             const response = await gastosDiariosService.createGastoDiario({
                 ...gastoData,
                 user: user.id,

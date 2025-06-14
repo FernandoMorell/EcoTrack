@@ -251,3 +251,69 @@ export const deleteIngreso = async (id) => {
     const response = await api.delete(`/ingresos/${id}`);
     return response.data;
 };
+
+// Servicios de notificaciones
+export const notificacionesService = {
+    getNotificaciones: async (userId) => {
+        try {
+            const response = await api.get(`/notificaciones/${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error en getNotificaciones:', error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    marcarLeidoNotificacion: async (notificacionId) => {
+        try {
+            const response = await api.put(`/notificaciones/${notificacionId}/leida`);
+            return response.data;
+        } catch (error) {
+            console.error('Error en markAsRead:', error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    createNotificacion: async (notificacionData) => {
+        try {
+            const response = await api.post('/notificaciones', notificacionData);
+            return response.data;
+        } catch (error) {
+            console.error('Error en createNotificacion:', error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    deleteNotificacion: async (notificacionId) => {
+        try {
+            const response = await api.delete(`/notificaciones/${notificacionId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error en deleteNotificacion:', error.response?.data || error.message);
+            throw error;
+        }
+    }
+};
+
+// Servicios de usuario
+export const userService = {
+    updateLimiteDiario: async (userId, limite) => {
+        try {
+            const response = await api.put(`/users/${userId}/limite`, { limite: limite });
+            return response.data;
+        } catch (error) {
+            console.error('Error en updateLimiteDiario:', error.response?.data || error.message);
+            throw error;
+        }
+    },
+
+    getLimiteDiario: async (userId) => {
+        try {
+            const response = await api.get(`/users/${userId}/limite`);
+            return response.data;
+        } catch (error) {
+            console.error('Error en getLimiteDiario:', error.response?.data || error.message);
+            throw error;
+        }
+    }
+};

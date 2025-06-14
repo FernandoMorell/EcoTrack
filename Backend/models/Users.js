@@ -54,4 +54,21 @@ export class UserModel {
 
     return accesstoken
   }
+
+  static async getLimiteDiario (userId) {
+    await connectDB()
+    const user = await User.findById(userId)
+    if (!user) throw new Error('Usuario no encontrado\n')
+    return user.limiteDiario
+  }
+
+  static async updateLimiteDiario (userId, limite) {
+    await connectDB()
+    const user = await User.findById(userId)
+    if (!user) throw new Error('Usuario no encontrado\n')
+
+    user.limiteDiario = limite
+    await user.save()
+    return user
+  }
 }

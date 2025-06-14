@@ -7,6 +7,7 @@ import IngresosPage from './IngresosPage';
 import GastosPage from './GastosPage';
 import NotificacionesPage from './NotificacionesPage';
 import ProfilePage from './ProfilePage';
+import ComparacionPage from './ComparacionPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ export default function Layout() {
                     <Stack.Screen name="Ingresos" component={IngresosPage} />
                     <Stack.Screen name="Gastos" component={GastosPage} />
                     <Stack.Screen name="Notificaciones" component={NotificacionesPage} />
+                    <Stack.Screen name="Comparacion" component={ComparacionPage} />
                     <Stack.Screen name="Profile" component={ProfilePage} />
                 </Stack.Navigator>
             </View>

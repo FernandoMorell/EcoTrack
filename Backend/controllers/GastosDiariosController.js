@@ -21,20 +21,17 @@ export const GastosDiariosController = {
       res.status(500).json({ error: err.message })
     }
   },
-
   createGastoDiario: async (req, res) => {
     const { nombre, cantidad, tipo, fecha, user } = req.body
     if (!nombre || !cantidad || !tipo || !fecha || !user) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' })
     }
     try {
-      const mes = fecha.substring(0, 7) // Obtiene YYYY-MM de la fecha
-      // Asegurar que existe el InfoMes para este mes
+      const mes = fecha.substring(0, 7)
       const infoMes = await InfoMesModel.asegurarInfoMes(mes, user)
-      // Crear el gasto diario
       const newGastoDiario = await GastoDiarioModel.createGastoDiario(nombre, cantidad, tipo, fecha, user)
-      // Actualizar el InfoMes con el nuevo gasto
       await InfoMesModel.accionGasto(infoMes._id, { tipo, cantidad }, 'add')
+
       res.status(201).json(newGastoDiario)
     } catch (err) {
       res.status(400).json({ error: err.message })

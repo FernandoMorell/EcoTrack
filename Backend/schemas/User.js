@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  limiteDiario: {
+    type: Number,
+    default: 0 // 0 significa sin límite
   }
 })
 

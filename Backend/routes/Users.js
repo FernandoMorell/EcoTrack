@@ -1,15 +1,12 @@
 import { Router } from 'express'
-import { authController } from '../controllers/AuthController.js'
+import { userController } from '../controllers/UserController.js'
 
 const usersRouter = Router()
 
-// Logear un usuario
-usersRouter.post('/login', authController.loginUser)
-// Hacer logout de un usuario
-usersRouter.post('/logout', authController.logoutUser)
-// Registrar un nuevo usuario
-usersRouter.post('/register', authController.registerUser)
-// Refrescar el token de acceso
-usersRouter.post('/refresh', authController.refreshToken)
+// Obtener límite diario del usuario
+usersRouter.get('/:userId/limite', userController.getLimiteDiario)
+
+// Actualizar límite diario del usuario
+usersRouter.put('/:userId/limite', userController.updateLimiteDiario)
 
 export default usersRouter

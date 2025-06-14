@@ -5,11 +5,13 @@ import { useAuth } from '../context/AuthContext';
 import { infoMesService } from '../services/ApiServices';
 import { dateUtils } from '../services/utils';
 import { PieChart } from 'react-native-chart-kit';
+import { useNavigation } from '@react-navigation/native';
 
 const screenWidth = Dimensions.get('window').width;
 
 export default function HomePage() {
     const { user } = useAuth();
+    const navigation = useNavigation();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
     const [infoMes, setInfoMes] = useState(null);
@@ -76,14 +78,23 @@ export default function HomePage() {
 
     return (
         <View style={styles.container}>
-            <Pressable 
-                onPress={() => setDatePickerVisible(true)}
-                style={styles.dateSelector}
-            >                
-                <Text style={styles.dateSelectorText}>
-                    {dateUtils.formatMesLargo(selectedDate)}
-                </Text>
-            </Pressable>
+            <View style={styles.header}>
+                <Pressable 
+                    onPress={() => setDatePickerVisible(true)}
+                    style={styles.dateSelector}
+                >                
+                    <Text style={styles.dateSelectorText}>
+                        {dateUtils.formatMesLargo(selectedDate)}
+                    </Text>
+                </Pressable>                <Pressable
+                    style={styles.compararButton}
+                    onPress={() => navigation.navigate('Comparacion', { 
+                        mesInicial: dateUtils.formatMes(selectedDate)
+                    })}
+                >
+                    <Text style={styles.compararButtonText}>Comparar Meses</Text>
+                </Pressable>
+            </View>
 
             <DateTimePickerModal
                 isVisible={isDatePickerVisible}
@@ -161,6 +172,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#f5f5f5',
         padding: 16,
     },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
     dateSelector: {
         backgroundColor: '#fff',
         padding: 12,
@@ -180,6 +197,24 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color: '#333',
+    },
+    compararButton: {
+        backgroundColor: '#3498db',
+        padding: 10,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    compararButtonText: {
+        color: 'white',
+        fontSize: 14,
+        fontWeight: '600',
     },
     statsContainer: {
         flex: 1,

@@ -1,8 +1,51 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TextInput, Alert } from 'react-native';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { userService } from '../services/ApiServices';
 
 export default function ProfilePage() {
     const { user, logout } = useAuth();
+    const [limiteDiario, setLimiteDiario] = useState('');
+    const [editandoLimite, setEditandoLimite] = useState(false);
+    const [limiteActual, setLimiteActual] = useState(0);
+
+    useEffect(() => {
+        if (user) {
+            cargarLimiteDiario();
+        }
+    }, [user]);
+
+    const cargarLimiteDiario = async () => {
+        try {
+            const data = await userService.getLimiteDiario(user.id);
+            setLimiteActual(data.limiteDiario);
+            setLimiteDiario(data.limiteDiario.toString());
+        } catch (error) {
+            Alert.alert('Error', 'No se pudo cargar el límite diario');
+        }
+    };
+
+    const handleLimiteDiario = async () => {
+        if (!limiteDiario.trim()) {
+            Alert.alert('Error', 'El límite diario no puede estar vacío');
+            return;
+        }
+
+        const limite = parseFloat(limiteDiario);
+        if (isNaN(limite) || limite < 0) {
+            Alert.alert('Error', 'El límite debe ser un número válido mayor o igual a 0');
+            return;
+        }
+
+        try {
+            await userService.updateLimiteDiario(user.id, limite);
+            setLimiteActual(limite);
+            setEditandoLimite(false);
+            Alert.alert('Éxito', 'Límite diario actualizado correctamente');
+        } catch (error) {
+            Alert.alert('Error', 'No se pudo actualizar el límite diario');
+        }
+    };
 
     const handleLogout = async () => {
         await logout();
@@ -13,6 +56,50 @@ export default function ProfilePage() {
             <View style={styles.profileSection}>
                 <Text style={styles.label}>Usuario</Text>
                 <Text style={styles.userName}>{user?.name || 'Usuario'}</Text>
+            </View>
+
+            <View style={styles.profileSection}>
+                <Text style={styles.label}>Límite Diario de Gastos</Text>
+                {editandoLimite ? (
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            style={styles.input}
+                            value={limiteDiario}
+                            onChangeText={setLimiteDiario}
+                            keyboardType="numeric"
+                            placeholder="Introduce el límite diario"
+                        />
+                        <View style={styles.buttonContainer}>
+                            <Pressable 
+                                style={[styles.button, styles.saveButton]} 
+                                onPress={handleLimiteDiario}
+                            >
+                                <Text style={styles.buttonText}>Guardar</Text>
+                            </Pressable>
+                            <Pressable 
+                                style={[styles.button, styles.cancelButton]} 
+                                onPress={() => {
+                                    setEditandoLimite(false);
+                                    setLimiteDiario(limiteActual.toString());
+                                }}
+                            >
+                                <Text style={styles.buttonText}>Cancelar</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                ) : (
+                    <View style={styles.valueContainer}>
+                        <Text style={styles.value}>
+                            {limiteActual > 0 ? `${limiteActual}€` : 'Sin límite'}
+                        </Text>
+                        <Pressable 
+                            style={[styles.button, styles.editButton]} 
+                            onPress={() => setEditandoLimite(true)}
+                        >
+                            <Text style={styles.buttonText}>Editar</Text>
+                        </Pressable>
+                    </View>
+                )}
             </View>
             
             <Pressable 
@@ -57,6 +144,55 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         color: '#333',
+    },
+    inputContainer: {
+        marginTop: 10,
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 8,
+        padding: 12,
+        fontSize: 16,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+    },
+    valueContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 5,
+    },
+    value: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    button: {
+        padding: 10,
+        borderRadius: 8,
+        alignItems: 'center',
+        flex: 1,
+        marginHorizontal: 5,
+    },
+    editButton: {
+        backgroundColor: '#3498db',
+        flex: 0,
+        paddingHorizontal: 20,
+    },
+    saveButton: {
+        backgroundColor: '#2ecc71',
+    },
+    cancelButton: {
+        backgroundColor: '#e74c3c',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 14,
+        fontWeight: 'bold',
     },
     logoutButton: {
         backgroundColor: '#f44336',
