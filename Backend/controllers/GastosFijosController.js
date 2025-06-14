@@ -13,12 +13,12 @@ export const GastosFijosController = {
       res.status(500).json({ error: err.message })
     }
   },
-
   createGastoFijo: async (req, res) => {
     const { nombre, cantidad, user } = req.body
     if (!nombre || !cantidad || !user) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' })
+      return res.status(400).json({ error: 'Todos los campos son obligatorios (nombre, cantidad, user)' })
     }
+
     try {
       const newGastoFijo = await GastoFijoModel.createGastoFijo(nombre, cantidad, user)
       res.status(201).json(newGastoFijo)
@@ -40,7 +40,6 @@ export const GastosFijosController = {
       res.status(400).json({ error: err.message })
     }
   },
-
   deleteGastoFijo: async (req, res) => {
     const { id } = req.params
     if (!id) {

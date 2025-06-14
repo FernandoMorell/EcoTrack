@@ -7,7 +7,7 @@ export const ingresosController = {
       return res.status(400).json({ error: 'El ID de usuario es obligatorio' })
     }
     try {
-      const ingresos = await IngresoModel.getIngresos(userId)
+      const ingresos = await IngresoModel.getAllIngresos(userId)
       res.status(200).json(ingresos)
     } catch (err) {
       res.status(500).json({ error: err.message })
@@ -17,9 +17,11 @@ export const ingresosController = {
   createIngreso: async (req, res) => {
     const { nombre, cantidad, user } = req.body
     if (!nombre || !cantidad || !user) {
-      return res.status(400).json({ error: 'Todos los campos son obligatorios' })
+      return res.status(400).json({ error: 'Todos los campos son obligatorios (nombre, cantidad, user)' })
     }
+
     try {
+      // Crear el ingreso fijo y actualizar todos los InfoMes
       const newIngreso = await IngresoModel.createIngreso(nombre, cantidad, user)
       res.status(201).json(newIngreso)
     } catch (err) {
@@ -40,13 +42,13 @@ export const ingresosController = {
       res.status(400).json({ error: err.message })
     }
   },
-
   deleteIngreso: async (req, res) => {
     const { id } = req.params
     if (!id) {
       return res.status(400).json({ error: 'El ID del ingreso es obligatorio' })
     }
     try {
+      // Eliminar el ingreso y actualizar todos los InfoMes
       const result = await IngresoModel.deleteIngreso(id)
       res.status(200).json(result)
     } catch (err) {

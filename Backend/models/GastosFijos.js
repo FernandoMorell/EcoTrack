@@ -1,4 +1,5 @@
 import GastoFijo from '../schemas/GastoFijo.js'
+import InfoMes from '../schemas/InfoMes.js'
 import connectDB from '../db.js'
 
 export class GastoFijoModel {
@@ -20,6 +21,11 @@ export class GastoFijoModel {
 
     const newGastoFijo = new GastoFijo({ nombre, cantidad, user })
     await newGastoFijo.save()
+    // Actualizar todos los InfoMes del usuario en una sola operación
+    await InfoMes.updateMany(
+      { user },
+      { $inc: { 'gastos.Fijo': cantidad } }
+    )
     return newGastoFijo
   }
 
@@ -47,10 +53,25 @@ export class GastoFijoModel {
   static async deleteGastoFijo (id) {
     await connectDB()
 
-    const existingGastoFijo = await GastoFijo.findOne({ _id: id })
-    if (!existingGastoFijo) throw new Error('GastoFijo no existe\n')
+    const gastoFijo = await this.getGastoFijoById(id)
+    if (!gastoFijo) {
+      throw new Error('GastoFijo no encontrado')
+    }
+
+    // Actualizar todos los InfoMes del usuario en una sola operación
+    await InfoMes.updateMany(
+      { user: gastoFijo.user },
+      { $inc: { 'gastos.Fijo': -gastoFijo.cantidad } }
+    )
 
     await GastoFijo.findByIdAndDelete(id)
     return { message: 'GastoFijo eliminado correctamente\n' }
+  }
+
+  static async getGastoFijoById (id) {
+    await connectDB()
+    const gastoFijo = await GastoFijo.findById(id)
+    if (!gastoFijo) throw new Error('Gasto fijo no encontrado\n')
+    return gastoFijo
   }
 }

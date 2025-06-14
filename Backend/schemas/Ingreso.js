@@ -1,20 +1,17 @@
 import mongoose from 'mongoose'
 
-const ingresoschema = new mongoose.Schema({
+export const ingresoSchema = new mongoose.Schema({
   nombre: {
     type: String,
-    required: true
+    required: [true, 'El nombre es obligatorio']
   },
   cantidad: {
     type: Number,
-    required: true
+    required: [true, 'La cantidad es obligatoria']
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: [true, 'El usuario es obligatorio']
   }
 })
-
-const Ingreso = mongoose.model('Ingreso', ingresoschema)
-export default Ingreso

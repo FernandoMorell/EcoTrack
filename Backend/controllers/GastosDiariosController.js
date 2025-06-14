@@ -1,4 +1,5 @@
 import { GastoDiarioModel } from '../models/GastosDiarios.js'
+import { InfoMesModel } from '../models/InfoMes.js'
 
 export const GastosDiariosController = {
   getGastosDiarios: async (req, res) => {
@@ -27,7 +28,13 @@ export const GastosDiariosController = {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' })
     }
     try {
+      const mes = fecha.substring(0, 7) // Obtiene YYYY-MM de la fecha
+      // Asegurar que existe el InfoMes para este mes
+      const infoMes = await InfoMesModel.asegurarInfoMes(mes, user)
+      // Crear el gasto diario
       const newGastoDiario = await GastoDiarioModel.createGastoDiario(nombre, cantidad, tipo, fecha, user)
+      // Actualizar el InfoMes con el nuevo gasto
+      await InfoMesModel.accionGasto(infoMes._id, { tipo, cantidad }, 'add')
       res.status(201).json(newGastoDiario)
     } catch (err) {
       res.status(400).json({ error: err.message })
@@ -47,13 +54,27 @@ export const GastosDiariosController = {
       res.status(400).json({ error: err.message })
     }
   },
-
   deleteGastoDiario: async (req, res) => {
     const { id } = req.params
     if (!id) {
       return res.status(400).json({ error: 'El ID del gasto diario es obligatorio' })
     }
     try {
+      // Primero obtenemos el gasto para tener sus datos
+      const gasto = await GastoDiarioModel.getGastoDiarioById(id)
+      if (!gasto) {
+        return res.status(404).json({ error: 'Gasto diario no encontrado' })
+      }
+
+      // Obtenemos el InfoMes correspondiente a la fecha del gasto
+      const mes = gasto.fecha.substring(0, 7) // Obtiene YYYY-MM de la fecha
+      const infoMes = await InfoMesModel.getInfoMesByMonth(mes, gasto.user)
+      if (infoMes) {
+        // Eliminamos el gasto del InfoMes
+        await InfoMesModel.accionGasto(infoMes._id, { tipo: gasto.tipo, cantidad: gasto.cantidad }, 'remove')
+      }
+
+      // Finalmente eliminamos el gasto diario
       const result = await GastoDiarioModel.deleteGastoDiario(id)
       res.status(200).json(result)
     } catch (err) {

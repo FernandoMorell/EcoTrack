@@ -1,3 +1,4 @@
+import mongoose from 'mongoose'
 import InfoMes from '../schemas/InfoMes.js'
 import connectDB from '../db.js'
 
@@ -40,9 +41,9 @@ export class InfoMesModel {
     const cantidadActual = existingInfoMes.gastos.get(tipoGasto) || 0
 
     if (accion === 'add') {
-      existingInfoMes.gastos.set(tipoGasto, cantidadActual + 1)
+      existingInfoMes.gastos.set(tipoGasto, cantidadActual + gasto.cantidad)
     } else if (accion === 'remove') {
-      existingInfoMes.gastos.set(tipoGasto, Math.max(0, cantidadActual - 1))
+      existingInfoMes.gastos.set(tipoGasto, Math.max(0, cantidadActual - gasto.cantidad))
     }
 
     await existingInfoMes.save()
@@ -84,5 +85,42 @@ export class InfoMesModel {
 
     await InfoMes.findByIdAndDelete(id)
     return { message: 'Información del mes eliminada correctamente\n' }
+  }
+
+  static async asegurarInfoMes (mes, userId) {
+    await connectDB()
+    let infoMes = await InfoMes.findOne({ mes, user: userId })
+    if (!infoMes) {
+      // Crear nuevo InfoMes
+      infoMes = new InfoMes({ mes, user: userId })
+      // Obtener todos los ingresos y gastos fijos en una sola operación
+      const [ingresos, gastosFijos] = await Promise.all([
+        mongoose.model('Ingreso').aggregate([
+          { $match: { user: userId } },
+          { $group: { _id: null, totalIngresos: { $sum: '$cantidad' } } }
+        ]),
+        mongoose.model('GastoFijo').aggregate([
+          { $match: { user: userId } },
+          { $group: { _id: null, totalGastosFijos: { $sum: '$cantidad' } } }
+        ])
+      ])
+
+      // Aplicar los totales al nuevo InfoMes
+      if (ingresos.length > 0) {
+        infoMes.ingresos = ingresos[0].totalIngresos
+      }
+      if (gastosFijos.length > 0) {
+        infoMes.gastos.set('Fijo', gastosFijos[0].totalGastosFijos)
+      }
+
+      await infoMes.save()
+    }
+    return infoMes
+  }
+
+  static async getAllInfoMesByUser (userId) {
+    await connectDB()
+    const infoMeses = await InfoMes.find({ user: userId })
+    return infoMeses
   }
 }

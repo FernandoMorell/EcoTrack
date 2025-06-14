@@ -125,23 +125,50 @@ export const infoMesService = {
 // Servicios de gastos diarios
 export const gastosDiariosService = {
     getGastosDiarios: async (userId, fecha) => {
-        const response = await api.get(`/gastosdiarios/${userId}`, { params: { fecha } });
-        return response.data;
-    },
-
+        try {
+            const response = await api.get(`/gastosdiarios/${userId}`, { params: { fecha } });
+            return response.data;
+        } catch (error) {
+            console.error('Error en getGastosDiarios:', error.response?.data || error.message);
+            throw error;
+        }
+    },    
+    
     createGastoDiario: async (gastoDiario) => {
-        const response = await api.post('/gastosdiarios', gastoDiario);
-        return response.data;
+        try {
+            const { nombre, cantidad, tipo, fecha, user } = gastoDiario;
+            const response = await api.post('/gastosdiarios/', {
+                nombre,
+                cantidad: Number(cantidad),
+                tipo,
+                fecha,
+                user
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error en createGastoDiario:', error.response?.data || error.message);
+            throw error;
+        }
     },
 
     updateGastoDiario: async (id, gastoDiario) => {
-        const response = await api.put(`/gastosdiarios/${id}`, gastoDiario);
-        return response.data;
+        try {
+            const response = await api.put(`/gastosdiarios/${id}`, gastoDiario);
+            return response.data;
+        } catch (error) {
+            console.error('Error en updateGastoDiario:', error.response?.data || error.message);
+            throw error;
+        }
     },
 
     deleteGastoDiario: async (id) => {
-        const response = await api.delete(`/gastosdiarios/${id}`);
-        return response.data;
+        try {
+            const response = await api.delete(`/gastosdiarios/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error en deleteGastoDiario:', error.response?.data || error.message);
+            throw error;
+        }
     },
 };
 
@@ -169,24 +196,58 @@ export const gastosFijosService = {
 };
 
 // Servicios de ingresos
-export const ingresosService = {
-    getIngresos: async (userId) => {
-        const response = await api.get(`/ingresos/${userId}`);
-        return response.data;
+export const ingresosService = {    getIngresos: async (userId) => {
+        try {
+            const response = await api.get(`/ingresos/${userId}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error en getIngresos:', error.response?.data || error.message);
+            throw error;
+        }
+    },
+    
+    createIngreso: async (ingresoData) => {
+        try {
+            const response = await api.post('/ingresos', ingresoData);
+            return response.data;
+        } catch (error) {
+            console.error('Error en createIngreso:', error.response?.data || error.message);
+            throw error;
+        }
     },
 
-    createIngreso: async (ingreso) => {
-        const response = await api.post('/ingresos', ingreso);
-        return response.data;
-    },
-
-    updateIngreso: async (id, ingreso) => {
-        const response = await api.put(`/ingresos/${id}`, ingreso);
-        return response.data;
+    updateIngreso: async (id, ingresoData) => {
+        try {
+            const response = await api.put(`/ingresos/${id}`, ingresoData);
+            return response.data;
+        } catch (error) {
+            console.error('Error en updateIngreso:', error.response?.data || error.message);
+            throw error;
+        }
     },
 
     deleteIngreso: async (id) => {
-        const response = await api.delete(`/ingresos/${id}`);
-        return response.data;
-    },
+        try {
+            const response = await api.delete(`/ingresos/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error en deleteIngreso:', error.response?.data || error.message);
+            throw error;
+        }
+    }
+};
+
+export const createIngreso = async (ingresoData) => {
+    const response = await api.post('/ingresos', ingresoData);
+    return response.data;
+};
+
+export const updateIngreso = async (id, ingresoData) => {
+    const response = await api.put(`/ingresos/${id}`, ingresoData);
+    return response.data;
+};
+
+export const deleteIngreso = async (id) => {
+    const response = await api.delete(`/ingresos/${id}`);
+    return response.data;
 };

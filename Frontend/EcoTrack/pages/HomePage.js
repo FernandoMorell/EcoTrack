@@ -1,10 +1,12 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { useState, useEffect } from 'react';
-import { VictoryPie } from 'victory-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Pressable, Dimensions } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useAuth } from '../context/AuthContext';
 import { infoMesService } from '../services/ApiServices';
 import { dateUtils } from '../services/utils';
+import { PieChart } from 'react-native-chart-kit';
+
+const screenWidth = Dimensions.get('window').width;
 
 export default function HomePage() {
     const { user } = useAuth();
@@ -41,16 +43,32 @@ export default function HomePage() {
         if (!infoMes) return 0;
         const totalGastos = Object.values(infoMes.gastos).reduce((a, b) => a + b, 0);
         return infoMes.ingresos - totalGastos;
-    };
-
-    const prepararDatosGrafica = () => {
+    };    const prepararDatosGrafica = () => {
         if (!infoMes?.gastos) return [];
         
-        return Object.entries(infoMes.gastos).map(([tipo, cantidad]) => ({
-            x: tipo,
-            y: cantidad,
-            label: `${tipo}\n${((cantidad / infoMes.ingresos) * 100).toFixed(1)}%`
-        })).filter(item => item.y > 0);
+        const totalGastos = Object.values(infoMes.gastos).reduce((a, b) => a + b, 0);
+        
+        return Object.entries(infoMes.gastos)
+            .filter(([_, cantidad]) => cantidad > 0)
+            .map(([tipo, cantidad]) => ({
+                name: tipo,
+                population: cantidad, // PieChart espera 'population' como clave para el valor
+                color: getTipoColor(tipo),
+                legendFontColor: "#7F7F7F",
+                legendFontSize: 12,
+                percentage: totalGastos > 0 ? ((cantidad / totalGastos) * 100).toFixed(1) + '%' : '0%'
+            }));
+    };
+
+    const getTipoColor = (tipo) => {
+        const colores = {
+            'Ocio': '#FF6B6B',
+            'Comida': '#4ECDC4',
+            'Ropa': '#45B7D1',
+            'Otros': '#96CEB4',
+            'Fijo': '#FFBE0B'
+        };
+        return colores[tipo] || '#CCCCCC';
     };
 
     if (loading) return <Text style={styles.message}>Cargando...</Text>;
@@ -98,18 +116,28 @@ export default function HomePage() {
 
                     {prepararDatosGrafica().length > 0 ? (
                         <View style={styles.chartContainer}>
-                            <Text style={styles.chartTitle}>Distribución de Gastos</Text>
-                            <VictoryPie
+                            <Text style={styles.chartTitle}>Distribución de Gastos</Text>                            <PieChart
                                 data={prepararDatosGrafica()}
-                                colorScale={["tomato", "orange", "gold", "cyan", "navy"]}
-                                width={300}
-                                height={300}
-                                padding={50}
-                                labelComponent={<VictoryPie.VictoryLabel />}
-                                labelRadius={({ innerRadius }) => innerRadius + 30}
-                                style={{ 
-                                    labels: { fill: "black", fontSize: 12, fontWeight: "bold" }
+                                width={screenWidth - 40}
+                                height={220}
+                                chartConfig={{
+                                    backgroundColor: '#ffffff',
+                                    backgroundGradientFrom: '#ffffff',
+                                    backgroundGradientTo: '#ffffff',
+                                    decimalPlaces: 1,
+                                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                    style: {
+                                        borderRadius: 16
+                                    },
+                                    propsForLabels: {
+                                        fontSize: "10"
+                                    }
                                 }}
+                                accessor="population"
+                                backgroundColor="transparent"
+                                paddingLeft="15"
+                                absolute
                             />
                         </View>
                     ) : (

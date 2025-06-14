@@ -1,10 +1,104 @@
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useAuth } from '../context/AuthContext';
+import IngresosGrid from '../components/IngresosGrid';
+import IngresoDetalle from '../components/IngresoDetalle';
+import NuevoIngresoModal from '../components/NuevoIngresoModal';
 
-export default function IngresosPage() {
+export default function IngresosPage() {    const auth = useAuth();
+    const [selectedIngreso, setSelectedIngreso] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [refreshKey, setRefreshKey] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                // Esperar a que auth esté disponible
+                if (!auth || !auth.user || !auth.user.id) {
+                    console.log('Auth state:', auth); // Para depuración
+                    throw new Error('No autenticado o ID de usuario no disponible');
+                }
+                setIsLoading(false);
+            } catch (err) {
+                console.error('Error en checkAuth:', err);
+                setError(err.message);
+                setIsLoading(false);
+            }
+        };
+        
+        checkAuth();
+    }, [auth]);
+
+    if (isLoading) {
+        return (
+            <View style={[styles.container, styles.centered]}>
+                <ActivityIndicator size="large" color="#2ecc71" />
+            </View>
+        );
+    }
+
+    if (error || !auth || !auth.user) {
+        return (
+            <View style={[styles.container, styles.centered]}>
+                <Text style={styles.errorText}>Error: {error || 'No autenticado'}</Text>
+            </View>
+        );
+    }
+
+    const handleIngresoPress = (ingreso) => {
+        setSelectedIngreso(ingreso);
+    };
+
+    const handleBack = () => {
+        setSelectedIngreso(null);
+        setRefreshKey(prev => prev + 1);
+    };
+
+    const handleIngresoCreated = () => {
+        setRefreshKey(prev => prev + 1);
+    };
+
+    const handleIngresoUpdated = () => {
+        setRefreshKey(prev => prev + 1);
+        setSelectedIngreso(null);
+    };
+
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Pagina de ingresos</Text>
-            <Text style={styles.subtitle}>Tu compañero para un estilo de vida sostenible</Text>
+            {selectedIngreso ? (
+                <IngresoDetalle
+                    ingreso={selectedIngreso}
+                    onClose={handleBack}
+                    onUpdate={handleIngresoUpdated}
+                />
+            ) : (
+                <>
+                    <Text style={styles.title}>Ingresos</Text>
+                    <View style={styles.content}>
+                        <IngresosGrid
+                            key={refreshKey}
+                            userId={auth.user.id}
+                            onIngresoPress={handleIngresoPress}
+                        />
+                        <TouchableOpacity
+                            style={styles.fab}
+                            onPress={() => setShowModal(true)}
+                        >
+                        <Text style={styles.fabText}>+</Text>
+                        </TouchableOpacity>
+                    </View>                    
+                    <NuevoIngresoModal
+                        visible={showModal}
+                        onClose={() => setShowModal(false)}
+                        onIngresoCreated={handleIngresoCreated}
+                        userId={auth?.user?.id}
+                    />
+                </>
+            )}
         </View>
     );
 }
@@ -12,18 +106,49 @@ export default function IngresosPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#f0f0f0',
+    },    centered: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f0f0f0',
+    },
+    errorText: {
+        color: '#e74c3c',
+        fontSize: 16,
+        textAlign: 'center',
     },
     title: {
         fontSize: 32,
         fontWeight: 'bold',
         color: '#333',
+        padding: 20,
+        backgroundColor: 'white',
     },
-    subtitle: {
-        fontSize: 18,
-        color: '#666',
-        marginTop: 10,
+    content: {
+        flex: 1,
+        position: 'relative',
+    },
+    fab: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        width: 56,
+        height: 56,
+        borderRadius: 28,
+        backgroundColor: '#2ecc71',
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+    },
+    fabText: {
+        fontSize: 24,
+        color: 'white',
+        fontWeight: 'bold',
     },
 });
