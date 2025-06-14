@@ -16,10 +16,7 @@ export class GastoDiarioModel {
           $lte: endDate
         }
       })
-      if (!GastosDiarios || GastosDiarios.length === 0) {
-        return [] // Return empty array instead of throwing error
-      }
-      return GastosDiarios
+      return GastosDiarios || []
     } catch (error) {
       console.error('Error en getGastosDiarios:', error)
       throw new Error('Error al obtener los gastos diarios')
@@ -38,20 +35,8 @@ export class GastoDiarioModel {
       // Set the time to start of day to ensure consistent comparison
       parsedDate.setHours(0, 0, 0, 0)
 
-      const existingGastoDiario = await GastoDiario.findOne({
-        nombre,
-        user,
-        fecha: {
-          $gte: parsedDate,
-          $lt: new Date(parsedDate.getTime() + 24 * 60 * 60 * 1000)
-        }
-      })
-
-      if (existingGastoDiario) {
-        throw new Error('GastoDiario ya registrado')
-      }
-
-      if (tipo !== 'Ocio' && tipo !== 'Comida' && tipo !== 'Ropa' && tipo !== 'Otros') {
+      const tiposValidos = ['Ocio', 'Comida', 'Ropa', 'Otros']
+      if (!tiposValidos.includes(tipo)) {
         throw new Error('Tipo de GastoDiario inválido. Debe ser Ocio, Comida, Ropa o Otros')
       }
 
@@ -79,21 +64,31 @@ export class GastoDiarioModel {
     await connectDB()
 
     const existingGastoDiario = await GastoDiario.findById(id)
-    if (!existingGastoDiario) throw new Error('GastoDiario no existe\n')
+    if (!existingGastoDiario) throw new Error('GastoDiario no existe')
 
     if (nombre !== undefined) {
-      const duplicate = await GastoDiario.findOne({ nombre, user: existingGastoDiario.user, _id: { $ne: id } })
-      if (duplicate) throw new Error('Ya existe un gasto diario con ese nombre\n')
+      const duplicate = await GastoDiario.findOne({
+        nombre,
+        user: existingGastoDiario.user,
+        fecha: {
+          $gte: new Date(existingGastoDiario.fecha).setHours(0, 0, 0, 0),
+          $lt: new Date(existingGastoDiario.fecha).setHours(23, 59, 59, 999)
+        },
+        _id: { $ne: id }
+      })
+      if (duplicate) throw new Error('Ya existe un gasto diario con ese nombre en el mismo día')
       existingGastoDiario.nombre = nombre
     }
 
     if (cantidad !== undefined) {
-      if (cantidad <= 0) throw new Error('La cantidad debe ser mayor que cero\n')
+      if (cantidad <= 0) throw new Error('La cantidad debe ser mayor que cero')
       existingGastoDiario.cantidad = cantidad
     }
+
     if (tipo !== undefined) {
-      if (tipo !== 'Ocio' && tipo !== 'Comida' && tipo !== 'Ropa' && tipo !== 'Otros') {
-        throw new Error('Tipo de GastoDiario inválido. Debe ser Ocio, Comida, Ropa o Otros\n')
+      const tiposValidos = ['Ocio', 'Comida', 'Ropa', 'Otros']
+      if (!tiposValidos.includes(tipo)) {
+        throw new Error('Tipo de GastoDiario inválido. Debe ser Ocio, Comida, Ropa o Otros')
       }
       existingGastoDiario.tipo = tipo
     }
@@ -105,11 +100,11 @@ export class GastoDiarioModel {
   static async deleteGastoDiario (id) {
     await connectDB()
 
-    const existingGastoDiario = await GastoDiario.findOne({ _id: id })
-    if (!existingGastoDiario) throw new Error('GastoDiario no existe\n')
+    const existingGastoDiario = await GastoDiario.findById(id)
+    if (!existingGastoDiario) throw new Error('GastoDiario no existe')
 
     await GastoDiario.findByIdAndDelete(id)
-    return { message: 'GastoDiario eliminado correctamente\n' }
+    return { message: 'GastoDiario eliminado correctamente' }
   }
 
   static async getGastoDiarioById (id) {

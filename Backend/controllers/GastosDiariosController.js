@@ -43,17 +43,46 @@ export const GastosDiariosController = {
 
   updateGastoDiario: async (req, res) => {
     const { id } = req.params
-    const GastoDiario = req.body
-    if (!id || !GastoDiario) {
+    const gastoActualizado = req.body
+    if (!id || !gastoActualizado) {
       return res.status(400).json({ error: 'El ID y los datos del gasto diario son obligatorios' })
     }
     try {
-      const updatedGastoDiario = await GastoDiarioModel.updateGastoDiario(id, GastoDiario)
+      // Obtener el gasto original
+      const gastoOriginal = await GastoDiarioModel.getGastoDiarioById(id)
+      if (!gastoOriginal) {
+        return res.status(404).json({ error: 'Gasto diario no encontrado' })
+      }
+
+      // Obtener el InfoMes correspondiente a la fecha del gasto
+      const mes = gastoOriginal.fecha.toISOString().substring(0, 7)
+      const infoMes = await InfoMesModel.getInfoMes(gastoOriginal.user, mes)
+
+      if (!infoMes) {
+        return res.status(404).json({ error: 'No se encontró la información del mes' })
+      }
+
+      // Restar el gasto original del InfoMes
+      await InfoMesModel.accionGasto(infoMes._id, {
+        tipo: gastoOriginal.tipo,
+        cantidad: gastoOriginal.cantidad
+      }, 'remove')
+
+      // Actualizar el gasto
+      const updatedGastoDiario = await GastoDiarioModel.updateGastoDiario(id, gastoActualizado)
+
+      // Añadir el gasto actualizado al InfoMes
+      await InfoMesModel.accionGasto(infoMes._id, {
+        tipo: updatedGastoDiario.tipo,
+        cantidad: updatedGastoDiario.cantidad
+      }, 'add')
+
       res.status(200).json(updatedGastoDiario)
     } catch (err) {
       res.status(400).json({ error: err.message })
     }
   },
+
   deleteGastoDiario: async (req, res) => {
     const { id } = req.params
     if (!id) {
@@ -67,11 +96,14 @@ export const GastosDiariosController = {
       }
 
       // Obtenemos el InfoMes correspondiente a la fecha del gasto
-      const mes = gasto.fecha.substring(0, 7) // Obtiene YYYY-MM de la fecha
+      const mes = new Date(gasto.fecha).toISOString().substring(0, 7)
       const infoMes = await InfoMesModel.getInfoMesByMonth(mes, gasto.user)
       if (infoMes) {
         // Eliminamos el gasto del InfoMes
-        await InfoMesModel.accionGasto(infoMes._id, { tipo: gasto.tipo, cantidad: gasto.cantidad }, 'remove')
+        await InfoMesModel.accionGasto(infoMes._id, {
+          tipo: gasto.tipo,
+          cantidad: gasto.cantidad
+        }, 'remove')
       }
 
       // Finalmente eliminamos el gasto diario

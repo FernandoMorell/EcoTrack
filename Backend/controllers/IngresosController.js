@@ -1,4 +1,5 @@
 import { IngresoModel } from '../models/Ingresos.js'
+import InfoMes from '../schemas/InfoMes.js'
 
 export const ingresosController = {
   getIngresos: async (req, res) => {
@@ -28,15 +29,30 @@ export const ingresosController = {
       res.status(400).json({ error: err.message })
     }
   },
-
   updateIngreso: async (req, res) => {
     const { id } = req.params
-    const ingreso = req.body
-    if (!id || !ingreso) {
+    const ingresoActualizado = req.body
+    if (!id || !ingresoActualizado) {
       return res.status(400).json({ error: 'El ID y los datos del ingreso son obligatorios' })
     }
     try {
-      const updatedIngreso = await IngresoModel.updateIngreso(id, ingreso)
+      // Obtener el ingreso original
+      const ingresoOriginal = await IngresoModel.getIngresoById(id)
+      if (!ingresoOriginal) {
+        return res.status(404).json({ error: 'Ingreso no encontrado' })
+      }
+
+      // Si cambió la cantidad, actualizar todos los InfoMes
+      if (ingresoActualizado.cantidad && ingresoActualizado.cantidad !== ingresoOriginal.cantidad) {
+        const diferencia = ingresoActualizado.cantidad - ingresoOriginal.cantidad
+        // Actualizar todos los InfoMes del usuario
+        await InfoMes.updateMany(
+          { user: ingresoOriginal.user },
+          { $inc: { ingresos: diferencia } }
+        )
+      }
+
+      const updatedIngreso = await IngresoModel.updateIngreso(id, ingresoActualizado)
       res.status(200).json(updatedIngreso)
     } catch (err) {
       res.status(400).json({ error: err.message })

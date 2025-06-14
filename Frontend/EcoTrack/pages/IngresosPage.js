@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import IngresosGrid from '../components/IngresosGrid';
 import IngresoDetalle from '../components/IngresoDetalle';
 import NuevoIngresoModal from '../components/NuevoIngresoModal';
 
-export default function IngresosPage() {    const auth = useAuth();
+export default function IngresosPage() {
+    const auth = useAuth();
     const [selectedIngreso, setSelectedIngreso] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [refreshKey, setRefreshKey] = useState(0);
@@ -60,11 +61,9 @@ export default function IngresosPage() {    const auth = useAuth();
 
     const handleIngresoCreated = () => {
         setRefreshKey(prev => prev + 1);
-    };
-
-    const handleIngresoUpdated = () => {
-        setRefreshKey(prev => prev + 1);
-        setSelectedIngreso(null);
+    };    const handleIngresoUpdated = (ingresoActualizado) => {
+        setRefreshKey(prev => prev + 1); // Actualizar la lista
+        setSelectedIngreso(ingresoActualizado); // Mantener la vista de detalle con los datos actualizados
     };
 
     return (

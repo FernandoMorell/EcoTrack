@@ -87,6 +87,31 @@ export class InfoMesModel {
     return { message: 'Información del mes eliminada correctamente\n' }
   }
 
+  static async actualizarGasto (infoMesId, { tipo, cantidad }) {
+    await connectDB()
+
+    const infoMes = await InfoMes.findById(infoMesId)
+    if (!infoMes) {
+      throw new Error('InfoMes no encontrado')
+    }
+
+    // Asegurarse de que el tipo existe en el objeto gastos
+    if (!infoMes.gastos[tipo]) {
+      infoMes.gastos[tipo] = 0
+    }
+
+    // Actualizar la cantidad
+    infoMes.gastos[tipo] += cantidad
+
+    // No permitir valores negativos
+    if (infoMes.gastos[tipo] < 0) {
+      infoMes.gastos[tipo] = 0
+    }
+
+    await infoMes.save()
+    return infoMes
+  }
+
   static async asegurarInfoMes (mes, userId) {
     await connectDB()
     let infoMes = await InfoMes.findOne({ mes, user: userId })

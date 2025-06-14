@@ -1,48 +1,56 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import { gastosDiariosService } from '../services/ApiServices';
 
 export default function GastoDiarioDetalle({ gasto, onClose, onUpdate }) {
     const [isEditing, setIsEditing] = useState(false);
     const [nombre, setNombre] = useState(gasto.nombre);
     const [cantidad, setCantidad] = useState(gasto.cantidad.toString());
     const [tipo, setTipo] = useState(gasto.tipo);
-    const [error, setError] = useState('');
 
-    const handleUpdate = () => {
-        if (!nombre.trim() || !cantidad.trim() || !tipo.trim()) {
-            setError('Todos los campos son obligatorios');
-            return;
+    const tiposGasto = ['Comida', 'Ropa', 'Ocio', 'Otros'];
+
+    const handleUpdate = async () => {
+        try {
+            if (!nombre.trim()) {
+                Alert.alert('Error', 'El nombre es obligatorio');
+                return;
+            }
+
+            const cantidadNum = parseFloat(cantidad);
+            if (isNaN(cantidadNum) || cantidadNum <= 0) {
+                Alert.alert('Error', 'La cantidad debe ser un número mayor que 0');
+                return;
+            }
+
+            if (!tiposGasto.includes(tipo)) {
+                Alert.alert('Error', 'El tipo no es válido');
+                return;
+            }
+
+            const gastoActualizado = await gastosDiariosService.updateGastoDiario(gasto._id, {
+                nombre: nombre.trim(),
+                cantidad: cantidadNum,
+                tipo,
+                fecha: gasto.fecha
+            });
+
+            onUpdate(gastoActualizado);
+            setIsEditing(false);
+            Alert.alert('Éxito', 'Gasto diario actualizado correctamente');
+        } catch (error) {
+            Alert.alert('Error', error.message || 'Error al actualizar el gasto diario');
         }
-
-        const cantidadNum = parseFloat(cantidad);
-        if (isNaN(cantidadNum) || cantidadNum <= 0) {
-            setError('La cantidad debe ser un número positivo');
-            return;
-        }
-
-        onUpdate({
-            ...gasto,
-            nombre,
-            cantidad: cantidadNum,
-            tipo
-        });
-        setIsEditing(false);
-        setError('');
     };
 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={onClose} style={styles.closeButton}>
-                    <MaterialIcons name="close" size={24} color="#333" />
+                    <Text style={styles.closeButtonText}>←</Text>
                 </TouchableOpacity>
-                <TouchableOpacity 
-                    onPress={() => setIsEditing(!isEditing)}
-                    style={styles.editButton}
-                >
-                    <MaterialIcons name={isEditing ? "check" : "edit"} size={24} color="#333" />
-                </TouchableOpacity>
+                <Text style={styles.title}>Detalle del Gasto Diario</Text>
             </View>
 
             <View style={styles.content}>
@@ -58,31 +66,61 @@ export default function GastoDiarioDetalle({ gasto, onClose, onUpdate }) {
                             style={styles.input}
                             value={cantidad}
                             onChangeText={setCantidad}
-                            placeholder="Cantidad"
                             keyboardType="numeric"
+                            placeholder="Cantidad"
                         />
-                        <TextInput
-                            style={styles.input}
-                            value={tipo}
-                            onChangeText={setTipo}
-                            placeholder="Tipo de gasto"
-                        />
-                        {error ? <Text style={styles.error}>{error}</Text> : null}
-                        <TouchableOpacity 
-                            style={styles.updateButton}
-                            onPress={handleUpdate}
-                        >
-                            <Text style={styles.updateButtonText}>Actualizar</Text>
-                        </TouchableOpacity>
+                        <View style={styles.pickerContainer}>
+                            <Picker
+                                selectedValue={tipo}
+                                onValueChange={setTipo}
+                                style={styles.picker}
+                            >
+                                {tiposGasto.map((t) => (
+                                    <Picker.Item key={t} label={t} value={t} />
+                                ))}
+                            </Picker>
+                        </View>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity 
+                                style={[styles.button, styles.cancelButton]} 
+                                onPress={() => setIsEditing(false)}
+                            >
+                                <Text style={styles.buttonText}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={[styles.button, styles.saveButton]} 
+                                onPress={handleUpdate}
+                            >
+                                <Text style={styles.buttonText}>Guardar</Text>
+                            </TouchableOpacity>
+                        </View>
                     </>
                 ) : (
                     <>
-                        <Text style={styles.title}>{nombre}</Text>
-                        <Text style={styles.amount}>-{cantidad}€</Text>
-                        <Text style={styles.type}>{tipo}</Text>
-                        <Text style={styles.date}>
-                            {new Date(gasto.fecha).toLocaleDateString()}
-                        </Text>
+                        <View style={styles.infoRow}>
+                            <Text style={styles.label}>Nombre:</Text>
+                            <Text style={styles.value}>{gasto.nombre}</Text>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <Text style={styles.label}>Cantidad:</Text>
+                            <Text style={styles.value}>-{gasto.cantidad}€</Text>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <Text style={styles.label}>Tipo:</Text>
+                            <Text style={styles.value}>{gasto.tipo}</Text>
+                        </View>
+                        <View style={styles.infoRow}>
+                            <Text style={styles.label}>Fecha:</Text>
+                            <Text style={styles.value}>
+                                {new Date(gasto.fecha).toLocaleDateString()}
+                            </Text>
+                        </View>
+                        <TouchableOpacity 
+                            style={[styles.button, styles.editButton]} 
+                            onPress={() => setIsEditing(true)}
+                        >
+                            <Text style={styles.buttonText}>Editar</Text>
+                        </TouchableOpacity>
                     </>
                 )}
             </View>
@@ -92,70 +130,92 @@ export default function GastoDiarioDetalle({ gasto, onClose, onUpdate }) {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: 'white',
-        borderRadius: 15,
-        padding: 20,
-        width: '90%',
-        maxHeight: '80%',
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 20,
+        alignItems: 'center',
+        padding: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
     },
     closeButton: {
-        padding: 5,
+        padding: 10,
     },
-    editButton: {
-        padding: 5,
-    },
-    content: {
-        alignItems: 'center',
+    closeButtonText: {
+        fontSize: 24,
+        color: '#333',
     },
     title: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 10,
+        marginLeft: 15,
     },
-    amount: {
-        fontSize: 32,
-        fontWeight: 'bold',
-        color: '#FF0000',
-        marginBottom: 15,
+    content: {
+        padding: 20,
     },
-    type: {
-        fontSize: 18,
-        color: '#666',
-        marginBottom: 10,
+    infoRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginVertical: 10,
+        paddingVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
     },
-    date: {
+    label: {
         fontSize: 16,
-        color: '#999',
+        color: '#666',
+    },
+    value: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#333',
     },
     input: {
-        width: '100%',
         borderWidth: 1,
         borderColor: '#ddd',
         borderRadius: 8,
-        padding: 10,
-        marginBottom: 15,
+        padding: 12,
+        marginVertical: 8,
         fontSize: 16,
     },
-    error: {
-        color: 'red',
-        marginBottom: 10,
+    pickerContainer: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 8,
+        marginVertical: 8,
+        overflow: 'hidden',
     },
-    updateButton: {
-        backgroundColor: '#4CAF50',
+    picker: {
+        height: 50,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 20,
+    },
+    button: {
         padding: 15,
         borderRadius: 8,
-        width: '100%',
         alignItems: 'center',
+        flex: 1,
+        marginHorizontal: 5,
     },
-    updateButtonText: {
+    editButton: {
+        backgroundColor: '#3498db',
+        marginTop: 20,
+    },
+    saveButton: {
+        backgroundColor: '#2ecc71',
+    },
+    cancelButton: {
+        backgroundColor: '#e74c3c',
+    },
+    buttonText: {
         color: 'white',
         fontSize: 16,
-        fontWeight: 'bold',
+        fontWeight: '600',
     },
 });

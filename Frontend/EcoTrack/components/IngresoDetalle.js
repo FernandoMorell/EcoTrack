@@ -6,9 +6,13 @@ export default function IngresoDetalle({ ingreso, onClose, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
   const [nombre, setNombre] = useState(ingreso.nombre);
   const [cantidad, setCantidad] = useState(ingreso.cantidad.toString());
-
   const handleUpdate = async () => {
     try {
+      if (!nombre.trim()) {
+        Alert.alert('Error', 'El nombre es obligatorio');
+        return;
+      }
+
       const cantidadNum = parseFloat(cantidad);
       if (isNaN(cantidadNum) || cantidadNum <= 0) {
         Alert.alert('Error', 'La cantidad debe ser un número mayor que 0');
@@ -16,13 +20,13 @@ export default function IngresoDetalle({ ingreso, onClose, onUpdate }) {
       }
 
       const ingresoActualizado = await updateIngreso(ingreso._id, {
-        nombre,
+        nombre: nombre.trim(),
         cantidad: cantidadNum,
-      });
-
-      onUpdate(ingresoActualizado);
-      setIsEditing(false);
+      });      
+      
+      setIsEditing(false); // Desactivar modo edición antes de actualizar
       Alert.alert('Éxito', 'Ingreso actualizado correctamente');
+      onUpdate(ingresoActualizado);
     } catch (error) {
       Alert.alert('Error', error.message || 'Error al actualizar el ingreso');
     }

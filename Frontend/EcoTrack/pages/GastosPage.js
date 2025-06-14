@@ -19,15 +19,15 @@ export default function GastosPage() {
     const [selectedGastoFijo, setSelectedGastoFijo] = useState(null);
     const [selectedGastoDiario, setSelectedGastoDiario] = useState(null);
     const [showNuevoGastoFijo, setShowNuevoGastoFijo] = useState(false);
-    const [showNuevoGastoDiario, setShowNuevoGastoDiario] = useState(false);    useEffect(() => {
-        // Solo cargamos al montar el componente
+    const [showNuevoGastoDiario, setShowNuevoGastoDiario] = useState(false);
+
+    useEffect(() => {
         loadGastos();
-    }, []); // Removemos selectedDate como dependencia
-    
+    }, []);
+
     const loadGastos = async () => {
         try {
             if (!user) return;
-            // Format date as YYYY-MM-DD
             const formattedDate = selectedDate.toISOString().split('T')[0];
             const gastosFijosResponse = await gastosFijosService.getGastosFijos(user.id);
             const gastosDiariosResponse = await gastosDiariosService.getGastosDiarios(user.id, formattedDate);
@@ -36,8 +36,9 @@ export default function GastosPage() {
         } catch (error) {
             console.error('Error loading gastos:', error);
         }
-    };    
-      const handleDateChange = async (event, date) => {
+    };
+
+    const handleDateChange = async (event, date) => {
         setShowDatePicker(false);
         if (date) {
             setSelectedDate(date);
@@ -63,7 +64,9 @@ export default function GastosPage() {
 
     const handleGastoDiarioPress = (gasto) => {
         setSelectedGastoDiario(gasto);
-    };    const handleNuevoGastoFijo = async (gastoData) => {
+    };
+
+    const handleNuevoGastoFijo = async (gastoData) => {
         try {
             if (!user) return;
             const response = await gastosFijosService.createGastoFijo({
@@ -71,11 +74,14 @@ export default function GastosPage() {
                 user: user.id
             });
             setGastosFijos([...gastosFijos, response]);
+            setShowNuevoGastoFijo(false);
+            Alert.alert('Éxito', 'Gasto fijo creado correctamente');
         } catch (error) {
             console.error('Error creating gasto fijo:', error);
+            Alert.alert('Error', 'No se pudo crear el gasto fijo');
         }
-    };    
-    
+    };
+
     const handleNuevoGastoDiario = async (gastoData) => {
         try {
             if (!user) {
@@ -90,6 +96,7 @@ export default function GastosPage() {
                 fecha: formattedDate
             });
             setGastosDiarios([...gastosDiarios, response]);
+            setShowNuevoGastoDiario(false);
             Alert.alert('Éxito', 'Gasto diario creado correctamente');
         } catch (error) {
             console.error('Error creating gasto diario:', error);
@@ -98,26 +105,35 @@ export default function GastosPage() {
                 error.response?.data?.error || 'Ocurrió un error al crear el gasto diario'
             );
         }
-    };    
-    
-    const handleUpdateGastoFijo = async (gastoData) => {
+    };    const handleUpdateGastoFijo = async (gastoData) => {
         try {
-            const response = await gastosFijosService.updateGastoFijo(gastoData.id, gastoData);
-            setGastosFijos(gastosFijos.map(g => g.id === gastoData.id ? response : g));
-            setSelectedGastoFijo(null);
+            const response = await gastosFijosService.updateGastoFijo(gastoData._id, gastoData);
+            setGastosFijos(gastosFijos.map(g => g._id === gastoData._id ? response : g));
+            setSelectedGastoFijo(response); // Actualizamos el gasto seleccionado con la respuesta del servidor
+            await loadGastos(); // Reload to ensure InfoMes is updated
         } catch (error) {
             console.error('Error updating gasto fijo:', error);
+            throw error;
         }
-    };    const handleUpdateGastoDiario = async (gastoData) => {
+    };
+      const handleUpdateGastoDiario = async (gastoData) => {
         try {
-            const response = await gastosDiariosService.updateGastoDiario(gastoData.id, gastoData);
-            setGastosDiarios(gastosDiarios.map(g => g.id === gastoData.id ? response : g));
-            setSelectedGastoDiario(null);
+            const response = await gastosDiariosService.updateGastoDiario(gastoData._id, gastoData);
+            setGastosDiarios(gastosDiarios.map(g => g._id === gastoData._id ? response : g));
+            setSelectedGastoDiario(response); // Actualizamos el gasto seleccionado con la respuesta del servidor
+            await loadGastos(); // Reload to ensure InfoMes is updated
         } catch (error) {
             console.error('Error updating gasto diario:', error);
+            throw error;
         }
-    };    
-    
+    };
+
+    const handleBack = () => {
+        setSelectedGastoFijo(null);
+        setSelectedGastoDiario(null);
+        loadGastos();
+    };
+
     const getSectionsData = () => {
         return [
             {
@@ -150,12 +166,6 @@ export default function GastosPage() {
             {section.renderContent()}
         </View>
     );
-
-    const handleBack = () => {
-        setSelectedGastoFijo(null);
-        setSelectedGastoDiario(null);
-        loadGastos();
-    };
 
     const renderMainContent = () => (
         <>
@@ -228,8 +238,7 @@ const styles = StyleSheet.create({
     dateButton: {
         backgroundColor: 'white',
         padding: 15,
-        marginHorizontal: 10,
-        marginVertical: 10,
+        margin: 10,
         borderRadius: 8,
         alignItems: 'center',
         shadowColor: '#000',
@@ -243,24 +252,13 @@ const styles = StyleSheet.create({
     },
     dateButtonText: {
         fontSize: 16,
-        fontWeight: '600',
         color: '#333',
+        fontWeight: '600',
     },
     content: {
         flex: 1,
     },
-    sectionHeader: {
-        backgroundColor: '#f5f5f5',
-        padding: 10,
-        marginHorizontal: 10,
-    },
-    sectionHeaderText: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#333',
-    },
     sectionContent: {
-        flex: 1,
-        minHeight: 200,
+        marginBottom: 20,
     },
 });
