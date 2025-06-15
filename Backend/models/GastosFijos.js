@@ -6,7 +6,7 @@ export class GastoFijoModel {
   static async getGastosFijos (userId) {
     await connectDB()
     const GastosFijos = await GastoFijo.find({ user: userId })
-    return GastosFijos
+    return GastosFijos || []
   }
 
   static async createGastoFijo (nombre, cantidad, user) {
@@ -19,13 +19,17 @@ export class GastoFijoModel {
       throw new Error('La cantidad debe ser mayor que cero\n')
     }
 
-    const newGastoFijo = new GastoFijo({ nombre, cantidad, user })
-    await newGastoFijo.save()
-    // Actualizar todos los InfoMes del usuario en una sola operación
+    const newGastoFijo = new GastoFijo({
+      nombre,
+      cantidad,
+      user
+    })
+    // Actualizar todos los InfoMes del usuario
     await InfoMes.updateMany(
       { user },
       { $inc: { 'gastos.Fijo': cantidad } }
     )
+    await newGastoFijo.save()
     return newGastoFijo
   }
 
@@ -43,6 +47,11 @@ export class GastoFijoModel {
 
     if (cantidad !== undefined) {
       if (cantidad <= 0) throw new Error('La cantidad debe ser mayor que cero\n')
+      // Actualizar todos los InfoMes del usuario
+      await InfoMes.updateMany(
+        { user: existingGastoFijo.user },
+        { $inc: { 'gastos.Fijo': cantidad - existingGastoFijo.cantidad } }
+      )
       existingGastoFijo.cantidad = cantidad
     }
 
@@ -55,10 +64,10 @@ export class GastoFijoModel {
 
     const gastoFijo = await this.getGastoFijoById(id)
     if (!gastoFijo) {
-      throw new Error('GastoFijo no encontrado')
+      throw new Error('GastoFijo no existe\n')
     }
 
-    // Actualizar todos los InfoMes del usuario en una sola operación
+    // Actualizar todos los InfoMes del usuario
     await InfoMes.updateMany(
       { user: gastoFijo.user },
       { $inc: { 'gastos.Fijo': -gastoFijo.cantidad } }
@@ -71,7 +80,7 @@ export class GastoFijoModel {
   static async getGastoFijoById (id) {
     await connectDB()
     const gastoFijo = await GastoFijo.findById(id)
-    if (!gastoFijo) throw new Error('Gasto fijo no encontrado\n')
+    if (!gastoFijo) throw new Error('Gasto fijo no existe\n')
     return gastoFijo
   }
 }

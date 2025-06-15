@@ -3,11 +3,11 @@ import mongoose from 'mongoose'
 const notificacionSchema = new mongoose.Schema({
   titulo: {
     type: String,
-    required: [true, 'El título es obligatorio']
+    required: true
   },
   mensaje: {
     type: String,
-    required: [true, 'El mensaje es obligatorio']
+    required: true
   },
   leida: {
     type: Boolean,
@@ -16,7 +16,7 @@ const notificacionSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: [true, 'El usuario es obligatorio']
+    required: true
   }
 })
 

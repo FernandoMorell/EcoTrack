@@ -8,10 +8,10 @@ export class UserModel {
     await connectDB()
     const user = await User.findOne({ name })
     if (!user) throw new Error('Usuario no encontrado\n')
-
+    // Comprobacion de contraseña
     const passwordMatch = await bcrypt.compare(password, user.password)
     if (!passwordMatch) throw new Error('Contraseña incorrecta\n')
-
+    // Generar tokens
     const accesstoken = jwt.sign({ id: user._id, name: user.name }, process.env.JWT_SECRET, {
       expiresIn: '60m'
     })
@@ -31,15 +31,19 @@ export class UserModel {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    const user = new User({ name, email, password: hashedPassword })
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword
+    })
     await user.save()
 
     return { message: 'Usuario registrado exitosamente\n' }
   }
 
   static async logoutUser () {
-    // TO DO: Implementar la lógica de cierre de sesión en Frontend
-    return { message: 'Sesión cerrada correctamente (simulado)\n' }
+    // El logout realmente no hace nada en el backend, ya que los tokens se invalidan en el cliente
+    return { message: 'Sesión cerrada correctamente\n' }
   }
 
   static async refreshToken (token) {
@@ -47,7 +51,7 @@ export class UserModel {
 
     const user = jwt.verify(token, process.env.JWT_REFRESH_SECRET)
     if (!user) throw new Error('Token inválido\n')
-
+    // Generar un nuevo token de acceso
     const accesstoken = jwt.sign({ id: user.id, name: user.name }, process.env.JWT_SECRET, {
       expiresIn: '60m'
     })

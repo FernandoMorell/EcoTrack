@@ -13,6 +13,7 @@ export const userController = {
       res.status(500).json({ error: err.message })
     }
   },
+
   updateLimiteDiario: async (req, res) => {
     const { userId } = req.params
     const { limite } = req.body

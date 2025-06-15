@@ -47,32 +47,5 @@ export const authController = {
     } catch (err) {
       return res.status(403).json({ error: 'Token inválido' })
     }
-  },
-
-  getLimiteDiario: async (req, res) => {
-    const { userId } = req.params
-    if (!userId) {
-      return res.status(400).json({ error: 'El ID del usuario es requerido' })
-    }
-    try {
-      const limiteDiario = await UserModel.getLimiteDiario(userId)
-      res.status(200).json({ limiteDiario })
-    } catch (err) {
-      res.status(400).json({ error: err.message })
-    }
-  },
-
-  updateLimiteDiario: async (req, res) => {
-    const { userId } = req.params
-    const { limiteDiario } = req.body
-    if (!userId || limiteDiario === undefined) {
-      return res.status(400).json({ error: 'El ID del usuario y el límite son requeridos' })
-    }
-    try {
-      await UserModel.updateLimiteDiario(userId, limiteDiario)
-      res.status(200).json({ message: 'Límite diario actualizado correctamente' })
-    } catch (err) {
-      res.status(400).json({ error: err.message })
-    }
   }
 }

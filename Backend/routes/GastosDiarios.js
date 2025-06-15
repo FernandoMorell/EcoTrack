@@ -10,7 +10,7 @@ GastosDiariosRouter.get('/:userId', GastosDiariosController.getGastosDiarios)
 // Crear un nuevo GastoDiario
 GastosDiariosRouter.post('/', GastosDiariosController.createGastoDiario)
 // Actualizar un GastoDiario existente
-GastosDiariosRouter.put('/:id', GastosDiariosController.updateGastoDiario)
+GastosDiariosRouter.patch('/:id', GastosDiariosController.updateGastoDiario)
 // Eliminar un GastoDiario existente
 GastosDiariosRouter.delete('/:id', GastosDiariosController.deleteGastoDiario)
 

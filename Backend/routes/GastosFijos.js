@@ -10,7 +10,7 @@ GastosFijosRouter.get('/:userId', GastosFijosController.getGastosFijos)
 // Crear un nuevo GastoFijo
 GastosFijosRouter.post('/', GastosFijosController.createGastoFijo)
 // Actualizar un GastoFijo existente
-GastosFijosRouter.put('/:id', GastosFijosController.updateGastoFijo)
+GastosFijosRouter.patch('/:id', GastosFijosController.updateGastoFijo)
 // Eliminar un GastoFijo existente
 GastosFijosRouter.delete('/:id', GastosFijosController.deleteGastoFijo)
 

@@ -9,8 +9,9 @@ import infoMesRouter from './routes/InfoMes.js'
 import notificacionesRouter from './routes/Notificaciones.js'
 import dotenv from 'dotenv'
 
+// Configuración del entorno
 const app = express()
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 
 dotenv.config()
 
@@ -18,9 +19,7 @@ app.use(json())
 app.use(cors())
 app.disable('x-powered-by')
 
-app.get('/', (req, res) => {
-  res.send('¡Hola Mundo!')
-})
+// Rutas
 
 app.use('/auth', authRouter)
 
@@ -36,6 +35,7 @@ app.use('/infomes', infoMesRouter)
 
 app.use('/notificaciones', notificacionesRouter)
 
+// Lanzar el servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en: http://localhost:${PORT}`)
 })

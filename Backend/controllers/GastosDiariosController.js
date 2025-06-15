@@ -1,5 +1,4 @@
 import { GastoDiarioModel } from '../models/GastosDiarios.js'
-import { InfoMesModel } from '../models/InfoMes.js'
 
 export const GastosDiariosController = {
   getGastosDiarios: async (req, res) => {
@@ -21,17 +20,15 @@ export const GastosDiariosController = {
       res.status(500).json({ error: err.message })
     }
   },
+
   createGastoDiario: async (req, res) => {
     const { nombre, cantidad, tipo, fecha, user } = req.body
     if (!nombre || !cantidad || !tipo || !fecha || !user) {
       return res.status(400).json({ error: 'Todos los campos son obligatorios' })
     }
     try {
-      const mes = fecha.substring(0, 7)
-      const infoMes = await InfoMesModel.asegurarInfoMes(mes, user)
+      // Crear el gasto diario y actualizar el InfoMes
       const newGastoDiario = await GastoDiarioModel.createGastoDiario(nombre, cantidad, tipo, fecha, user)
-      await InfoMesModel.accionGasto(infoMes._id, { tipo, cantidad }, 'add')
-
       res.status(201).json(newGastoDiario)
     } catch (err) {
       res.status(400).json({ error: err.message })
@@ -45,35 +42,8 @@ export const GastosDiariosController = {
       return res.status(400).json({ error: 'El ID y los datos del gasto diario son obligatorios' })
     }
     try {
-      // Obtener el gasto original
-      const gastoOriginal = await GastoDiarioModel.getGastoDiarioById(id)
-      if (!gastoOriginal) {
-        return res.status(404).json({ error: 'Gasto diario no encontrado' })
-      }
-
-      // Obtener el InfoMes correspondiente a la fecha del gasto
-      const mes = gastoOriginal.fecha.toISOString().substring(0, 7)
-      const infoMes = await InfoMesModel.getInfoMes(gastoOriginal.user, mes)
-
-      if (!infoMes) {
-        return res.status(404).json({ error: 'No se encontró la información del mes' })
-      }
-
-      // Restar el gasto original del InfoMes
-      await InfoMesModel.accionGasto(infoMes._id, {
-        tipo: gastoOriginal.tipo,
-        cantidad: gastoOriginal.cantidad
-      }, 'remove')
-
-      // Actualizar el gasto
+      // Actualizar el gasto y el InfoMes
       const updatedGastoDiario = await GastoDiarioModel.updateGastoDiario(id, gastoActualizado)
-
-      // Añadir el gasto actualizado al InfoMes
-      await InfoMesModel.accionGasto(infoMes._id, {
-        tipo: updatedGastoDiario.tipo,
-        cantidad: updatedGastoDiario.cantidad
-      }, 'add')
-
       res.status(200).json(updatedGastoDiario)
     } catch (err) {
       res.status(400).json({ error: err.message })
@@ -86,24 +56,7 @@ export const GastosDiariosController = {
       return res.status(400).json({ error: 'El ID del gasto diario es obligatorio' })
     }
     try {
-      // Primero obtenemos el gasto para tener sus datos
-      const gasto = await GastoDiarioModel.getGastoDiarioById(id)
-      if (!gasto) {
-        return res.status(404).json({ error: 'Gasto diario no encontrado' })
-      }
-
-      // Obtenemos el InfoMes correspondiente a la fecha del gasto
-      const mes = new Date(gasto.fecha).toISOString().substring(0, 7)
-      const infoMes = await InfoMesModel.getInfoMesByMonth(mes, gasto.user)
-      if (infoMes) {
-        // Eliminamos el gasto del InfoMes
-        await InfoMesModel.accionGasto(infoMes._id, {
-          tipo: gasto.tipo,
-          cantidad: gasto.cantidad
-        }, 'remove')
-      }
-
-      // Finalmente eliminamos el gasto diario
+      // Eliminar el gasto diario y actualizar el InfoMes
       const result = await GastoDiarioModel.deleteGastoDiario(id)
       res.status(200).json(result)
     } catch (err) {

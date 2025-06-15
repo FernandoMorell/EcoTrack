@@ -10,7 +10,7 @@ ingresosRouter.get('/:userId', ingresosController.getIngresos)
 // Crear un nuevo ingreso
 ingresosRouter.post('/', ingresosController.createIngreso)
 // Actualizar un ingreso existente
-ingresosRouter.put('/:id', ingresosController.updateIngreso)
+ingresosRouter.patch('/:id', ingresosController.updateIngreso)
 // Eliminar un ingreso existente
 ingresosRouter.delete('/:id', ingresosController.deleteIngreso)
 

@@ -1,59 +1,80 @@
-import mongoose from 'mongoose'
-import { ingresoSchema } from '../schemas/Ingreso.js'
+import { Ingreso } from '../schemas/Ingreso.js'
 import InfoMes from '../schemas/InfoMes.js'
 import connectDB from '../db.js'
 
-const Ingreso = mongoose.model('Ingreso', ingresoSchema)
-
-export const IngresoModel = {
-  async createIngreso (nombre, cantidad, user) {
+export class IngresoModel {
+  static async createIngreso (nombre, cantidad, user) {
     await connectDB()
     const ingreso = new Ingreso({
       nombre,
       cantidad,
       user
     })
+    // Actualizar todos los InfoMes del usuario
     await InfoMes.updateMany(
       { user },
       { $inc: { ingresos: cantidad } }
     )
     await ingreso.save()
     return ingreso
-  },
+  }
 
-  async getAllIngresos (user) {
+  static async getAllIngresos (user) {
     await connectDB()
-    const ingresos = await Ingreso.find({ user })
-    return ingresos
-  },
+    try {
+      const ingresos = await Ingreso.find({ user })
+      return ingresos || []
+    } catch (error) {
+      throw new Error('Error al obtener los ingresos\n')
+    }
+  }
 
-  async updateIngreso (id, update) {
+  static async updateIngreso (id, { nombre, cantidad }) {
     await connectDB()
-    const ingreso = await Ingreso.findByIdAndUpdate(id, update, { new: true })
-    if (!ingreso) throw new Error('Ingreso no encontrado')
-    return ingreso
-  },
 
-  async deleteIngreso (id) {
+    const existingIngreso = await Ingreso.findById(id)
+    if (!existingIngreso) throw new Error('Ingreso no encontrado\n')
+
+    if (nombre !== undefined) {
+      const existingIngreso = await Ingreso.findOne({ nombre, user: { $ne: id } })
+      if (existingIngreso) throw new Error('Ya existe un ingreso con ese nombre\n')
+      existingIngreso.nombre = nombre
+    }
+
+    if (cantidad !== undefined) {
+      if (cantidad <= 0) throw new Error('La cantidad debe ser mayor que cero\n')
+      // Actualizar todos los InfoMes del usuario
+      await InfoMes.updateMany(
+        { user: existingIngreso.user },
+        { $inc: { ingresos: cantidad - existingIngreso.cantidad } }
+      )
+      existingIngreso.cantidad = cantidad
+    }
+
+    await existingIngreso.save()
+    return existingIngreso
+  }
+
+  static async deleteIngreso (id) {
     await connectDB()
     const ingreso = await this.getIngresoById(id)
     if (!ingreso) {
-      throw new Error('Ingreso no encontrado')
+      throw new Error('Ingreso no encontrado\n')
     }
 
-    // Actualizar todos los InfoMes del usuario en una sola operación
+    // Actualizar todos los InfoMes del usuario
     await InfoMes.updateMany(
       { user: ingreso.user },
       { $inc: { ingresos: -ingreso.cantidad } }
     )
     await Ingreso.findByIdAndDelete(id)
     return { message: 'Ingreso eliminado correctamente\n' }
-  },
+  }
 
-  async getIngresoById (id) {
+  static async getIngresoById (id) {
     await connectDB()
     const ingreso = await Ingreso.findById(id)
-    if (!ingreso) throw new Error('Ingreso no encontrado')
+    if (!ingreso) throw new Error('Ingreso no encontrado\n')
     return ingreso
   }
 }
