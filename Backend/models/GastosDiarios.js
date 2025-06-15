@@ -35,9 +35,9 @@ export class GastoDiarioModel {
       // Set the time to start of day to ensure consistent comparison
       parsedDate.setHours(0, 0, 0, 0)
 
-      const tiposValidos = ['Ocio', 'Comida', 'Ropa', 'Otros']
+      const tiposValidos = ['Ocio', 'Comida', 'Ropa', 'Transporte', 'Hogar', 'Otros']
       if (!tiposValidos.includes(tipo)) {
-        throw new Error('Tipo de GastoDiario inválido. Debe ser Ocio, Comida, Ropa o Otros')
+        throw new Error('Tipo de GastoDiario inválido. Debe ser Ocio, Comida, Ropa, Transporte, Hogar o Otros')
       }
 
       if (cantidad <= 0) {
@@ -86,9 +86,9 @@ export class GastoDiarioModel {
     }
 
     if (tipo !== undefined) {
-      const tiposValidos = ['Ocio', 'Comida', 'Ropa', 'Otros']
+      const tiposValidos = ['Ocio', 'Comida', 'Ropa', 'Transporte', 'Hogar', 'Otros']
       if (!tiposValidos.includes(tipo)) {
-        throw new Error('Tipo de GastoDiario inválido. Debe ser Ocio, Comida, Ropa o Otros')
+        throw new Error('Tipo de GastoDiario inválido. Debe ser Ocio, Comida, Ropa, Transporte, Hogar o Otros')
       }
       existingGastoDiario.tipo = tipo
     }

@@ -64,11 +64,13 @@ export default function HomePage() {
 
     const getTipoColor = (tipo) => {
         const colores = {
-            'Ocio': '#FF6B6B',
-            'Comida': '#4ECDC4',
-            'Ropa': '#45B7D1',
-            'Otros': '#96CEB4',
-            'Fijo': '#FFBE0B'
+            'Ocio': '#9b59b6',
+            'Comida': '#3498db',
+            'Ropa': '#f1c40f',
+            'Transporte': '#e67e22',
+            'Hogar': '#2ecc71',
+            'Otros': '#95a5a6',
+            'Fijo': '#f94030'
         };
         return colores[tipo] || '#CCCCCC';
     };

@@ -9,7 +9,7 @@ export default function GastoDiarioDetalle({ gasto, onClose, onUpdate }) {
     const [cantidad, setCantidad] = useState(gasto.cantidad.toString());
     const [tipo, setTipo] = useState(gasto.tipo);
 
-    const tiposGasto = ['Comida', 'Ropa', 'Ocio', 'Otros'];
+    const tiposGasto = ['Comida', 'Ropa', 'Ocio', 'Transporte', 'Hogar', 'Otros'];
 
     const handleUpdate = async () => {
         try {

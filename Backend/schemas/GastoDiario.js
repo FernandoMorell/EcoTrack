@@ -12,7 +12,7 @@ const gastoDiarioSchema = new mongoose.Schema({
   tipo: {
     type: String,
     required: true,
-    enum: ['Ocio', 'Comida', 'Ropa', 'Otros'],
+    enum: ['Ocio', 'Comida', 'Ropa', 'Transporte', 'Hogar', 'Otros'],
     lowercase: false,
     trim: true
   },

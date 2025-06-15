@@ -9,7 +9,7 @@ export default function NuevoGastoDiarioModal({ visible, onClose, onSubmit, sele
     const [tipo, setTipo] = useState('Comida');
     const [error, setError] = useState('');
 
-    const tiposGasto = ['Comida', 'Ropa', 'Ocio', 'Otros'];
+    const tiposGasto = ['Comida', 'Ropa', 'Ocio', 'Transporte', 'Hogar', 'Otros'];
 
     const handleSubmit = () => {
         if (!nombre.trim() || !cantidad.trim()) {

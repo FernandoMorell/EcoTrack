@@ -9,6 +9,10 @@ export default function GastoDiarioCard({ gasto, onPress }) {
         return '#9b59b6';
       case 'Ropa':
         return '#f1c40f';
+    case 'Transporte':
+        return '#e67e22';
+    case 'Hogar':
+        return '#2ecc71';
       default:
         return '#95a5a6';
     }

@@ -32,7 +32,7 @@ export class InfoMesModel {
     // Determinar tipo de gasto
     const tipoGasto = gasto.tipo || 'Fijo' // Si no tiene tipo, es GastoFijo
 
-    const tiposPermitidos = ['Mensual', 'Anual', 'Extraordinario', 'Ocio', 'Comida', 'Ropa', 'Otros', 'Fijo']
+    const tiposPermitidos = ['Ocio', 'Comida', 'Ropa', 'Transporte', 'Hogar', 'Otros', 'Fijo']
 
     if (!tiposPermitidos.includes(tipoGasto)) {
       throw new Error(`Tipo de gasto inválido. Debe ser uno de: ${tiposPermitidos.join(', ')}\n`)

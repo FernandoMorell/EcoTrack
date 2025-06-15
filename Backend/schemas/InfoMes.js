@@ -20,6 +20,8 @@ const infoMesSchema = new mongoose.Schema({
       Ocio: 0,
       Comida: 0,
       Ropa: 0,
+      Transporte: 0,
+      Hogar: 0,
       Otros: 0
     })
   },
