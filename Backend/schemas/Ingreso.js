@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export const ingresoSchema = new mongoose.Schema({
+const ingresoSchema = new mongoose.Schema({
   nombre: {
     type: String,
     required: true

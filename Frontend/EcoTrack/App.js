@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './pages/Layout.js';
 import LoginPage from './pages/LoginPage.js';
+import { userService } from './services/ApiServices';
 
 const Stack = createNativeStackNavigator();
 
@@ -20,7 +21,7 @@ function AppContent() {
         };
         init();
     }, []);    
-    
+
     if (isLoading) {
         return (
             <SafeAreaView style={styles.safeArea}>

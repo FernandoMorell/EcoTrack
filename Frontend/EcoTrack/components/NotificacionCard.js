@@ -2,10 +2,9 @@ import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function NotificacionCard({ notificacion, onDelete, marcarLeido }) {
-  return (
-    <View style={[
+  return (    <View style={[
       styles.card,
-      notificacion.leido && { backgroundColor: '#f5f5f5', borderLeftColor: '#95a5a6' }
+      { backgroundColor: notificacion.leido ? '#f5f5f5' : 'white', borderLeftColor: notificacion.leido ? '#95a5a6' : '#3498db' }
     ]}>
       <View style={styles.content}>
         <Text style={[

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Configuración de Axios para la API
 const api = axios.create({
     baseURL: 'http://192.168.18.29:3000',
     headers: {
@@ -153,7 +154,7 @@ export const gastosDiariosService = {
 
     updateGastoDiario: async (id, gastoDiario) => {
         try {
-            const response = await api.put(`/gastosdiarios/${id}`, gastoDiario);
+            const response = await api.patch(`/gastosdiarios/${id}`, gastoDiario);
             return response.data;
         } catch (error) {
             console.error('Error en updateGastoDiario:', error.response?.data || error.message);
@@ -185,7 +186,7 @@ export const gastosFijosService = {
     },
 
     updateGastoFijo: async (id, gastoFijo) => {
-        const response = await api.put(`/gastosfijos/${id}`, gastoFijo);
+        const response = await api.patch(`/gastosfijos/${id}`, gastoFijo);
         return response.data;
     },
 
@@ -196,7 +197,8 @@ export const gastosFijosService = {
 };
 
 // Servicios de ingresos
-export const ingresosService = {    getIngresos: async (userId) => {
+export const ingresosService = {    
+    getIngresos: async (userId) => {
         try {
             const response = await api.get(`/ingresos/${userId}`);
             return response.data;
@@ -218,7 +220,7 @@ export const ingresosService = {    getIngresos: async (userId) => {
 
     updateIngreso: async (id, ingresoData) => {
         try {
-            const response = await api.put(`/ingresos/${id}`, ingresoData);
+            const response = await api.patch(`/ingresos/${id}`, { nombre: ingresoData.nombre, cantidad: Number(ingresoData.cantidad) });
             return response.data;
         } catch (error) {
             console.error('Error en updateIngreso:', error.response?.data || error.message);
@@ -235,21 +237,6 @@ export const ingresosService = {    getIngresos: async (userId) => {
             throw error;
         }
     }
-};
-
-export const createIngreso = async (ingresoData) => {
-    const response = await api.post('/ingresos', ingresoData);
-    return response.data;
-};
-
-export const updateIngreso = async (id, ingresoData) => {
-    const response = await api.put(`/ingresos/${id}`, ingresoData);
-    return response.data;
-};
-
-export const deleteIngreso = async (id) => {
-    const response = await api.delete(`/ingresos/${id}`);
-    return response.data;
 };
 
 // Servicios de notificaciones
@@ -315,5 +302,5 @@ export const userService = {
             console.error('Error en getLimiteDiario:', error.response?.data || error.message);
             throw error;
         }
-    }
+    },
 };

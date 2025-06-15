@@ -9,7 +9,7 @@ const notificacionSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  leida: {
+  leido: {
     type: Boolean,
     default: false
   },

@@ -29,7 +29,7 @@ export class NotificacionModel {
     if (!notificacion) {
       throw new Error('Notificación no encontrada\n')
     }
-    notificacion.leida = !notificacion.leida // Cambia el estado de leída a no leída o viceversa
+    notificacion.leido = !notificacion.leido // Cambia el estado de leído a no leído o viceversa
     await notificacion.save()
     return notificacion
   }

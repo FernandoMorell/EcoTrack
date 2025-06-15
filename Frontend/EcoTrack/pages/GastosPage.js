@@ -94,11 +94,6 @@ export default function GastosPage() {
                     mensaje: `Has superado tu límite diario de ${limiteDiario}€ el ${selectedDate.toLocaleDateString()}.`,
                     user: user.id,
                 });
-                Alert.alert(
-                    'Advertencia',
-                    `Este gasto superará tu límite diario de ${limiteDiario}€`,
-                    [{ text: 'OK' }]
-                );
             } catch (error) {
                 console.error('Error al crear la notificación:', error);
             }

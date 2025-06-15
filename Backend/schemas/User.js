@@ -3,13 +3,13 @@ import mongoose from 'mongoose'
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   email: {
     type: String,
     required: true,
-    unique: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Por favor ingrese un email válido']
+    unique: true
   },
   password: {
     type: String,
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
   },
   limiteDiario: {
     type: Number,
-    default: 0 // 0 significa sin límite
+    default: 0
   }
 })
 

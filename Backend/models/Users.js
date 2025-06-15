@@ -75,4 +75,17 @@ export class UserModel {
     await user.save()
     return user
   }
+
+  static async getUserById (userId) {
+    await connectDB()
+    try {
+      const user = await User.findById(userId)
+      if (!user) {
+        throw new Error('Usuario no encontrado')
+      }
+      return user
+    } catch (error) {
+      throw new Error('Error al obtener el usuario: ' + error.message)
+    }
+  }
 }

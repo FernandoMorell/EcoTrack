@@ -77,13 +77,44 @@ export default function GastoFijoDetalle({ gasto, onClose, onUpdate }) {
             <View style={styles.infoRow}>
               <Text style={styles.label}>Cantidad:</Text>
               <Text style={styles.value}>-{gasto.cantidad}€</Text>
+            </View>            <View style={styles.buttonContainer}>
+              <TouchableOpacity 
+                style={[styles.button, styles.editButton]} 
+                onPress={() => setIsEditing(true)}
+              >
+                <Text style={styles.buttonText}>Editar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.button, styles.deleteButton]} 
+                onPress={() => {
+                  Alert.alert(
+                    'Eliminar Gasto Fijo',
+                    '¿Estás seguro de que quieres eliminar este gasto fijo?',
+                    [
+                      {
+                        text: 'Cancelar',
+                        style: 'cancel'
+                      },
+                      {
+                        text: 'Eliminar',
+                        style: 'destructive',
+                        onPress: async () => {
+                          try {
+                            await gastosFijosService.deleteGastoFijo(gasto._id);
+                            Alert.alert('Éxito', 'Gasto fijo eliminado correctamente');
+                            onClose();
+                          } catch (error) {
+                            Alert.alert('Error', 'No se pudo eliminar el gasto fijo');
+                          }
+                        }
+                      }
+                    ]
+                  );
+                }}
+              >
+                <Text style={styles.buttonText}>Eliminar</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity 
-              style={[styles.button, styles.editButton]} 
-              onPress={() => setIsEditing(true)}
-            >
-              <Text style={styles.buttonText}>Editar</Text>
-            </TouchableOpacity>
           </>
         )}
       </View>
@@ -158,13 +189,19 @@ const styles = StyleSheet.create({
   },
   editButton: {
     backgroundColor: '#3498db',
-    marginTop: 20,
+    flex: 1,
+    marginRight: 5,
   },
   saveButton: {
     backgroundColor: '#2ecc71',
   },
   cancelButton: {
     backgroundColor: '#e74c3c',
+  },
+  deleteButton: {
+    backgroundColor: '#e74c3c',
+    flex: 1,
+    marginLeft: 5,
   },
   buttonText: {
     color: 'white',

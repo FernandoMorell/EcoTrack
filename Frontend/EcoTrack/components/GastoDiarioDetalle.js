@@ -115,12 +115,44 @@ export default function GastoDiarioDetalle({ gasto, onClose, onUpdate }) {
                                 {new Date(gasto.fecha).toLocaleDateString()}
                             </Text>
                         </View>
-                        <TouchableOpacity 
-                            style={[styles.button, styles.editButton]} 
-                            onPress={() => setIsEditing(true)}
-                        >
-                            <Text style={styles.buttonText}>Editar</Text>
-                        </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+                            <TouchableOpacity 
+                                style={[styles.button, styles.editButton]} 
+                                onPress={() => setIsEditing(true)}
+                            >
+                                <Text style={styles.buttonText}>Editar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={[styles.button, styles.deleteButton]} 
+                                onPress={() => {
+                                    Alert.alert(
+                                        'Eliminar Gasto Diario',
+                                        '¿Estás seguro de que quieres eliminar este gasto diario?',
+                                        [
+                                            {
+                                                text: 'Cancelar',
+                                                style: 'cancel'
+                                            },
+                                            {
+                                                text: 'Eliminar',
+                                                style: 'destructive',
+                                                onPress: async () => {
+                                                    try {
+                                                        await gastosDiariosService.deleteGastoDiario(gasto._id);
+                                                        Alert.alert('Éxito', 'Gasto diario eliminado correctamente');
+                                                        onClose();
+                                                    } catch (error) {
+                                                        Alert.alert('Error', 'No se pudo eliminar el gasto diario');
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    );
+                                }}
+                            >
+                                <Text style={styles.buttonText}>Eliminar</Text>
+                            </TouchableOpacity>
+                        </View>
                     </>
                 )}
             </View>
@@ -205,13 +237,19 @@ const styles = StyleSheet.create({
     },
     editButton: {
         backgroundColor: '#3498db',
-        marginTop: 20,
+        flex: 1,
+        marginRight: 5,
     },
     saveButton: {
         backgroundColor: '#2ecc71',
     },
     cancelButton: {
         backgroundColor: '#e74c3c',
+    },
+    deleteButton: {
+        backgroundColor: '#e74c3c',
+        flex: 1,
+        marginLeft: 5,
     },
     buttonText: {
         color: 'white',

@@ -57,8 +57,7 @@ export default function HomePage() {
                 population: cantidad, // PieChart espera 'population' como clave para el valor
                 color: getTipoColor(tipo),
                 legendFontColor: "#7F7F7F",
-                legendFontSize: 12,
-                percentage: totalGastos > 0 ? ((cantidad / totalGastos) * 100).toFixed(1) + '%' : '0%'
+                legendFontSize: 12
             }));
     };
 
@@ -79,23 +78,27 @@ export default function HomePage() {
     if (error) return <Text style={styles.message}>{error}</Text>;
 
     return (
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Pressable 
-                    onPress={() => setDatePickerVisible(true)}
-                    style={styles.dateSelector}
-                >                
-                    <Text style={styles.dateSelectorText}>
-                        {dateUtils.formatMesLargo(selectedDate)}
-                    </Text>
-                </Pressable>                <Pressable
-                    style={styles.compararButton}
-                    onPress={() => navigation.navigate('Comparacion', { 
-                        mesInicial: dateUtils.formatMes(selectedDate)
-                    })}
-                >
-                    <Text style={styles.compararButtonText}>Comparar Meses</Text>
-                </Pressable>
+        <View style={styles.container}>            <View style={styles.header}>
+                <View style={styles.dateSelectorContainer}>
+                    <Pressable 
+                        onPress={() => setDatePickerVisible(true)}
+                        style={styles.dateSelector}
+                    >                
+                        <Text style={styles.dateSelectorText}>
+                            {dateUtils.formatMesLargo(selectedDate)}
+                        </Text>
+                    </Pressable>
+                </View>
+                <View style={styles.compararContainer}>
+                    <Pressable
+                        style={styles.compararButton}
+                        onPress={() => navigation.navigate('Comparacion', { 
+                            mesInicial: dateUtils.formatMes(selectedDate)
+                        })}
+                    >
+                        <Text style={styles.compararButtonText}>Comparar Meses</Text>
+                    </Pressable>
+                </View>
             </View>
 
             <DateTimePickerModal
@@ -103,7 +106,8 @@ export default function HomePage() {
                 mode="date"
                 onConfirm={handleConfirm}
                 onCancel={() => setDatePickerVisible(false)}
-            />            {infoMes ? (
+            />            
+            {infoMes ? (
                 <View style={styles.statsContainer}>
                     <View style={styles.statBox}>
                         <Text style={styles.statLabel}>Ingresos</Text>
@@ -173,18 +177,20 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#f5f5f5',
         padding: 16,
-    },
-    header: {
+    },    header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: 20,
     },
+    dateSelectorContainer: {
+        flex: 1,
+        marginRight: 10,
+    },
     dateSelector: {
         backgroundColor: '#fff',
         padding: 12,
         borderRadius: 8,
-        marginBottom: 20,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
@@ -199,6 +205,9 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color: '#333',
+    },
+    compararContainer: {
+        marginLeft: 10,
     },
     compararButton: {
         backgroundColor: '#3498db',

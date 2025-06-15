@@ -26,5 +26,21 @@ export const userController = {
     } catch (err) {
       res.status(500).json({ error: err.message })
     }
+  },
+
+  updatePushToken: async (req, res) => {
+    const { userId } = req.params
+    const { pushToken } = req.body
+
+    if (!userId || !pushToken) {
+      return res.status(400).json({ error: 'Se requiere ID de usuario y token de push' })
+    }
+
+    try {
+      const user = await UserModel.updatePushToken(userId, pushToken)
+      res.status(200).json(user)
+    } catch (err) {
+      res.status(400).json({ error: err.message })
+    }
   }
 }

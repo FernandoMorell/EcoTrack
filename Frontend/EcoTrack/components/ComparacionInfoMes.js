@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { infoMesService } from '../services/ApiServices';
+import { useNavigation } from '@react-navigation/native';
 
 export default function ComparacionInfoMes({ userId, mesInicial }) {
+    const navigation = useNavigation();
     const [mes1, setMes1] = useState(mesInicial || '');
     const [mes2, setMes2] = useState('');
     const [infoMes1, setInfoMes1] = useState(null);
@@ -104,7 +106,15 @@ export default function ComparacionInfoMes({ userId, mesInicial }) {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Comparación de Meses</Text>
+            <View style={styles.header}>
+                <Text style={styles.title}>Comparación de Meses</Text>
+                <Pressable 
+                    style={styles.volverButton}
+                    onPress={() => navigation.goBack()}
+                >
+                    <Text style={styles.volverButtonText}>Volver</Text>
+                </Pressable>
+            </View>
             
             <View style={styles.pickerContainer}>
                 <View style={styles.pickerWrapper}>
@@ -155,12 +165,37 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f5f5f5',
     },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#333',
         textAlign: 'center',
+    },
+    volverButton: {
+        backgroundColor: '#3498db',
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    volverButtonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
     pickerContainer: {
         marginBottom: 20,

@@ -1,5 +1,5 @@
 import GastoDiario from '../schemas/GastoDiario.js'
-import InfoMesModel from './InfoMes.js'
+import { InfoMesModel } from './InfoMes.js'
 import connectDB from '../db.js'
 
 export class GastoDiarioModel {
@@ -119,7 +119,7 @@ export class GastoDiarioModel {
 
     // Obtenemos el InfoMes correspondiente a la fecha del gasto
     const mes = new Date(existingGastoDiario.fecha).toISOString().substring(0, 7)
-    const infoMes = await InfoMesModel.getInfoMesByMonth(mes, existingGastoDiario.user)
+    const infoMes = await InfoMesModel.getInfoMes(existingGastoDiario.user, mes)
     if (!infoMes) throw new Error('InfoMes no encontrado para el usuario\n')
     // Restar el gasto del InfoMes
     await InfoMesModel.accionGasto(infoMes._id, {

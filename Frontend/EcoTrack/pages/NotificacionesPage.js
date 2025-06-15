@@ -37,13 +37,22 @@ export default function NotificacionesPage() {
         } catch (error) {
             Alert.alert('Error', 'Error al eliminar la notificación');
         }
-    };
-
-    const handleMarcarLeido = async (notificacionId) => {
+    };    const handleMarcarLeido = async (notificacionId) => {
         try {
-            await notificacionesService.marcarLeidoNotificacion(notificacionId);
-            setRefreshKey(prev => prev + 1);
+            const notificacionActualizada = await notificacionesService.marcarLeidoNotificacion(notificacionId);
+            
+            // Asegurarse de que la notificación actualizada tiene la propiedad correcta
+            if (typeof notificacionActualizada === 'object' && notificacionActualizada !== null) {
+                setNotificaciones(prevNotificaciones => 
+                    prevNotificaciones.map(notif => 
+                        notif._id === notificacionId ? notificacionActualizada : notif
+                    )
+                );
+            } else {
+                throw new Error('Respuesta del servidor inválida');
+            }
         } catch (error) {
+            console.error('Error al marcar como leída:', error);
             Alert.alert('Error', 'Error al marcar la notificación como leída');
         }
     };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { updateIngreso } from '../services/ApiServices';
+import { ingresosService } from '../services/ApiServices';
 
 export default function IngresoDetalle({ ingreso, onClose, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -19,7 +19,7 @@ export default function IngresoDetalle({ ingreso, onClose, onUpdate }) {
         return;
       }
 
-      const ingresoActualizado = await updateIngreso(ingreso._id, {
+      const ingresoActualizado = await ingresosService.updateIngreso(ingreso._id, {
         nombre: nombre.trim(),
         cantidad: cantidadNum,
       });      
@@ -81,13 +81,44 @@ export default function IngresoDetalle({ ingreso, onClose, onUpdate }) {
             <View style={styles.infoRow}>
               <Text style={styles.label}>Cantidad:</Text>
               <Text style={styles.value}>{ingreso.cantidad}€</Text>
+            </View>            <View style={styles.buttonContainer}>
+              <TouchableOpacity 
+                style={[styles.button, styles.editButton]} 
+                onPress={() => setIsEditing(true)}
+              >
+                <Text style={styles.buttonText}>Editar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.button, styles.deleteButton]} 
+                onPress={() => {
+                  Alert.alert(
+                    'Eliminar Ingreso',
+                    '¿Estás seguro de que quieres eliminar este ingreso?',
+                    [
+                      {
+                        text: 'Cancelar',
+                        style: 'cancel'
+                      },
+                      {
+                        text: 'Eliminar',
+                        style: 'destructive',
+                        onPress: async () => {
+                          try {
+                            await ingresosService.deleteIngreso(ingreso._id);
+                            Alert.alert('Éxito', 'Ingreso eliminado correctamente');
+                            onClose();
+                          } catch (error) {
+                            Alert.alert('Error', 'No se pudo eliminar el ingreso');
+                          }
+                        }
+                      }
+                    ]
+                  );
+                }}
+              >
+                <Text style={styles.buttonText}>Eliminar</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity 
-              style={[styles.button, styles.editButton]} 
-              onPress={() => setIsEditing(true)}
-            >
-              <Text style={styles.buttonText}>Editar</Text>
-            </TouchableOpacity>
           </>
         )}
       </View>
@@ -169,6 +200,10 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     backgroundColor: '#e74c3c',
+  },
+  deleteButton: {
+    backgroundColor: '#e74c3c',
+    marginTop: 20,
   },
   buttonText: {
     color: 'white',

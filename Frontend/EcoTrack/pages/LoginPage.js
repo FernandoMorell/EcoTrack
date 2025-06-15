@@ -9,10 +9,7 @@ export default function LoginPage() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Header />
-            </View>
-            
+
             <View style={styles.contentContainer}>
                 {currentView === 'login' ? (
                     <LoginMenu onSwitchToRegister={() => setCurrentView('register')} />

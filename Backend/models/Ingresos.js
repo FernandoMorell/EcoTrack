@@ -1,4 +1,4 @@
-import { Ingreso } from '../schemas/Ingreso.js'
+import Ingreso from '../schemas/Ingreso.js'
 import InfoMes from '../schemas/InfoMes.js'
 import connectDB from '../db.js'
 
@@ -36,8 +36,12 @@ export class IngresoModel {
     if (!existingIngreso) throw new Error('Ingreso no encontrado\n')
 
     if (nombre !== undefined) {
-      const existingIngreso = await Ingreso.findOne({ nombre, user: { $ne: id } })
-      if (existingIngreso) throw new Error('Ya existe un ingreso con ese nombre\n')
+      const duplicateIngreso = await Ingreso.findOne({
+        nombre,
+        user: existingIngreso.user,
+        _id: { $ne: id } // Excluir el ingreso actual
+      })
+      if (duplicateIngreso) throw new Error('Ya existe un ingreso con ese nombre\n')
       existingIngreso.nombre = nombre
     }
 

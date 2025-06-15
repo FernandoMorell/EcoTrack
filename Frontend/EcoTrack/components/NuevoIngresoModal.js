@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
-import { createIngreso } from '../services/ApiServices';
+import { ingresosService } from '../services/ApiServices';
 
 export default function NuevoIngresoModal({ visible, onClose, onIngresoCreated, userId }) {
   const [nombre, setNombre] = useState('');
@@ -19,7 +19,7 @@ export default function NuevoIngresoModal({ visible, onClose, onIngresoCreated, 
         return;
       }
 
-      const nuevoIngreso = await createIngreso({
+      const nuevoIngreso = await ingresosService.createIngreso({
         nombre,
         cantidad: cantidadNum,
         user: userId,
