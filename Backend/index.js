@@ -35,7 +35,11 @@ app.use('/infomes', infoMesRouter)
 
 app.use('/notificaciones', notificacionesRouter)
 
+app.get('/', (req, res) => {
+  res.send('API funcionando')
+})
+
 // Lanzar el servidor
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en: http://localhost:${PORT}`)
+  console.log(`Servidor corriendo en puerto: ${PORT}`)
 })
