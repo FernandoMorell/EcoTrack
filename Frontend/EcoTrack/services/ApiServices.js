@@ -31,7 +31,7 @@ api.interceptors.response.use(
         const originalRequest = error.config;
 
         // Si el error es 401 (Unauthorized) y no hemos intentado refrescar el token
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        if (error.response?.status === 403 && !originalRequest._retry) {
             originalRequest._retry = true;
 
             try {

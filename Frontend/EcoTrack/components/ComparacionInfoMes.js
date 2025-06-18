@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator, Pressable } from 'react-nati
 import { Picker } from '@react-native-picker/picker';
 import { infoMesService } from '../services/ApiServices';
 import { useNavigation } from '@react-navigation/native';
+import colors from '../themes/colors';
 
 export default function ComparacionInfoMes({ userId, mesInicial }) {
     const navigation = useNavigation();
@@ -74,7 +75,7 @@ export default function ComparacionInfoMes({ userId, mesInicial }) {
                     <Text style={styles.label}>Ingresos: <Text style={styles.valor}>{totales1.totalIngresos}€</Text></Text>
                     <Text style={styles.label}>Gastos: <Text style={styles.valor}>-{totales1.totalGastos}€</Text></Text>
                     <Text style={[styles.label, styles.balance]}>
-                        Balance: <Text style={[styles.valor, { color: totales1.balance >= 0 ? '#2ecc71' : '#e74c3c' }]}>
+                        Balance: <Text style={[styles.valor, { color: totales1.balance >= 0 ? colors.success : colors.error }]}>
                             {totales1.balance}€
                         </Text>
                     </Text>
@@ -87,7 +88,7 @@ export default function ComparacionInfoMes({ userId, mesInicial }) {
                     <Text style={styles.label}>Ingresos: <Text style={styles.valor}>{totales2.totalIngresos}€</Text></Text>
                     <Text style={styles.label}>Gastos: <Text style={styles.valor}>-{totales2.totalGastos}€</Text></Text>
                     <Text style={[styles.label, styles.balance]}>
-                        Balance: <Text style={[styles.valor, { color: totales2.balance >= 0 ? '#2ecc71' : '#e74c3c' }]}>
+                        Balance: <Text style={[styles.valor, { color: totales2.balance >= 0 ? colors.success : colors.error }]}>
                             {totales2.balance}€
                         </Text>
                     </Text>
@@ -107,13 +108,16 @@ export default function ComparacionInfoMes({ userId, mesInicial }) {
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Comparación de Meses</Text>
                 <Pressable 
-                    style={styles.volverButton}
                     onPress={() => navigation.goBack()}
+                    style={styles.backButton}
                 >
-                    <Text style={styles.volverButtonText}>Volver</Text>
+                    <Text style={styles.volverButtonText}>←</Text>
                 </Pressable>
+                <View style={styles.titleContainer}>
+                    <Text style={styles.title}>Comparación de Meses</Text>
+                </View>
+                <View style={styles.backButton} /> {/* Espacio vacío para equilibrar el layout */}
             </View>
             
             <View style={styles.pickerContainer}>
@@ -163,38 +167,30 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: colors.background,
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
+        justifyContent: 'space-between',
         marginBottom: 20,
+    },
+    backButton: {
+        width: 40, // Ancho fijo para el botón y el espacio vacío
+        justifyContent: 'center',
+    },
+    titleContainer: {
+        flex: 1,
+        alignItems: 'center',
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
-        color: '#333',
-        textAlign: 'center',
-    },
-    volverButton: {
-        backgroundColor: '#3498db',
-        paddingHorizontal: 15,
-        paddingVertical: 8,
-        borderRadius: 5,
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        color: colors.textPrimary,
     },
     volverButtonText: {
-        color: 'white',
-        fontSize: 16,
+        color: colors.textPrimary,
+        fontSize: 24,
         fontWeight: 'bold',
     },
     pickerContainer: {
@@ -216,7 +212,7 @@ const styles = StyleSheet.create({
     },
     pickerLabel: {
         fontSize: 16,
-        color: '#666',
+        color: colors.textPrimary,
         padding: 10,
         backgroundColor: '#f8f9fa',
         borderBottomWidth: 1,
@@ -246,29 +242,29 @@ const styles = StyleSheet.create({
     },
     separador: {
         width: 1,
-        backgroundColor: '#ddd',
+        backgroundColor: colors.textSecondary,
         marginHorizontal: 15,
     },
     mesTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
         marginBottom: 15,
     },
     label: {
         fontSize: 16,
-        color: '#666',
+        color: colors.textSecondary,
         marginBottom: 10,
     },
     valor: {
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textSecondary,
     },
     balance: {
         marginTop: 10,
         paddingTop: 10,
         borderTopWidth: 1,
-        borderTopColor: '#eee',
+        borderTopColor: colors.textSecondary,
     },
     loadingContainer: {
         flex: 1,

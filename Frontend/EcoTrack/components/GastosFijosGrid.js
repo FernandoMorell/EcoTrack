@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import GastoFijoCard from './GastoFijoCard';
+import colors from '../themes/colors';
 
 export default function GastosFijosGrid({ gastosFijos, onGastoPress, onAddPress }) {
     const renderItem = ({ item }) => (
@@ -16,7 +17,7 @@ export default function GastosFijosGrid({ gastosFijos, onGastoPress, onAddPress 
             <View style={styles.header}>
                 <Text style={styles.title}>Gastos Fijos</Text>
                 <TouchableOpacity onPress={onAddPress} style={styles.addButton}>
-                    <MaterialIcons name="add" size={24} color="#4CAF50" />
+                    <MaterialIcons name="add" size={24} color={colors.buttonPrimary} />
                 </TouchableOpacity>
             </View>
             {gastosFijos.length > 0 ? (
@@ -40,21 +41,21 @@ export default function GastosFijosGrid({ gastosFijos, onGastoPress, onAddPress 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: colors.background,
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 15,
-        backgroundColor: 'white',
+        backgroundColor: colors.background,
         borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+        borderBottomColor: colors.textSecondary,
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
     },
     addButton: {
         padding: 5,
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
     },
     emptyStateText: {
         fontSize: 16,
-        color: '#666',
+        color: colors.textSecondary,
         textAlign: 'center',
     },
 });

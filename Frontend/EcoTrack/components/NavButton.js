@@ -1,16 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
-import { Pressable, Text, StyleSheet } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import colors from '../themes/colors.js';
 
-export default function NavButton({ to, text, nested }) {
+export default function NavButton({ to, icon, nested }) {
     const navigation = useNavigation();
 
     const handleNavigation = () => {
         if (nested) {
-            // Si estamos en el Login, navegamos directamente
             if (navigation.getState().routes[0].name === 'Login') {
                 navigation.navigate(to);
             } else {
-                // Si estamos en el Layout, navegamos dentro de Main
                 navigation.navigate('Main', { screen: to });
             }
         } else {
@@ -21,14 +21,9 @@ export default function NavButton({ to, text, nested }) {
     return (
         <Pressable
             onPress={handleNavigation}
-            style={({ pressed }) => [
-                styles.button,
-                {
-                    backgroundColor: pressed ? '#ddd' : '#fff',
-                },
-            ]}
+            style={styles.button}
         >
-            <Text style={styles.text}>{text}</Text>
+            <MaterialIcons name={icon} size={28} color="#fff" />
         </Pressable>
     );
 }
@@ -38,11 +33,8 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         margin: 5,
-        minWidth: 80,
         alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.header,
     },
-    text: {
-        color: '#000',
-        fontSize: 16,
-    }
 });

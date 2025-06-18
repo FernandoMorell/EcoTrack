@@ -9,6 +9,7 @@ import GastoDiarioDetalle from '../components/GastoDiarioDetalle';
 import NuevoGastoFijoModal from '../components/NuevoGastoFijoModal';
 import NuevoGastoDiarioModal from '../components/NuevoGastoDiarioModal';
 import { gastosDiariosService, gastosFijosService, userService, notificacionesService } from '../services/ApiServices';
+import colors from '../themes/colors';
 
 export default function GastosPage() {
     const { user } = useAuth();
@@ -270,7 +271,7 @@ export default function GastosPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: colors.background,
     },
     dateButton: {
         backgroundColor: 'white',
@@ -289,7 +290,7 @@ const styles = StyleSheet.create({
     },
     dateButtonText: {
         fontSize: 16,
-        color: '#333',
+        color: colors.textPrimary,
         fontWeight: '600',
     },
     content: {

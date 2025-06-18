@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { View, TextInput, Text, Pressable, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, Text, Pressable, StyleSheet, Alert, Image } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import colors from '../themes/colors';
 
 export default function LoginMenu({ onSwitchToRegister }) {
     const [formData, setFormData] = useState({
@@ -19,6 +20,12 @@ export default function LoginMenu({ onSwitchToRegister }) {
 
     return (
         <View style={styles.container}>
+            <Image
+                source={require('../assets/Icon.png')}
+                style={styles.icon}
+            >
+            </Image>
+            <Text style={styles.title}>EcoTrack</Text>
             <Text style={styles.title}>Iniciar Sesión</Text>
             
             <TextInput
@@ -59,30 +66,32 @@ const styles = StyleSheet.create({
         width: '100%',
         maxWidth: 400,
         alignSelf: 'center',
+        backgroundColor: colors.background,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
         textAlign: 'center',
+        color: colors.textPrimary,
     },
     input: {
-        backgroundColor: '#fff',
+        backgroundColor: 'white',
         padding: 12,
         borderRadius: 8,
         marginBottom: 12,
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: colors.textSecondary,
     },
     loginButton: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: colors.buttonPrimary,
         padding: 15,
         borderRadius: 8,
         alignItems: 'center',
         marginTop: 10,
     },
     buttonText: {
-        color: '#fff',
+        color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
     },
@@ -91,7 +100,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     linkText: {
-        color: '#2196F3',
+        color: colors.buttonPrimary,
         fontSize: 14,
     },
+    icon: {
+        width: 150,
+        height: 150,
+        alignSelf: 'center',
+    }
 });

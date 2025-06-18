@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import GastoDiarioCard from './GastoDiarioCard';
+import colors from '../themes/colors';
 
 export default function GastosDiariosGrid({ gastosDiarios, onGastoPress, onAddPress }) {
     const renderItem = ({ item }) => (
@@ -21,7 +22,7 @@ export default function GastosDiariosGrid({ gastosDiarios, onGastoPress, onAddPr
                     <Text style={styles.total}>Total: -{total}€</Text>
                 </View>
                 <TouchableOpacity onPress={onAddPress} style={styles.addButton}>
-                    <MaterialIcons name="add" size={24} color="#4CAF50" />
+                    <MaterialIcons name="add" size={24} color={colors.buttonPrimary} />
                 </TouchableOpacity>
             </View>
             {gastosDiarios.length > 0 ? (
@@ -45,16 +46,16 @@ export default function GastosDiariosGrid({ gastosDiarios, onGastoPress, onAddPr
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: colors.background,
     },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         padding: 15,
-        backgroundColor: 'white',
+        backgroundColor: colors.background,
         borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+        borderBottomColor: colors.textSecondary,
     },
     headerLeft: {
         flex: 1,
@@ -62,11 +63,11 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
     },
     total: {
         fontSize: 16,
-        color: '#FF0000',
+        color: colors.error,
         marginTop: 4,
     },
     addButton: {
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     },
     emptyStateText: {
         fontSize: 16,
-        color: '#666',
+        color: colors.textSecondary,
         textAlign: 'center',
     },
 });

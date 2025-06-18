@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import Header from '../components/Header';
 import LoginMenu from '../components/LoginMenu';
 import RegisterMenu from '../components/RegisterMenu';
+import colors from '../themes/colors';
 
 export default function LoginPage() {
     const [currentView, setCurrentView] = useState('login');
@@ -24,10 +25,10 @@ export default function LoginPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: colors.background,
     },
     headerContainer: {
-        backgroundColor: '#fff',
+        backgroundColor: colors.background,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,

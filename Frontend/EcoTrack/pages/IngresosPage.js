@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import IngresosGrid from '../components/IngresosGrid';
 import IngresoDetalle from '../components/IngresoDetalle';
 import NuevoIngresoModal from '../components/NuevoIngresoModal';
+import colors from '../themes/colors';
 
 export default function IngresosPage() {
     const auth = useAuth();
@@ -76,7 +77,9 @@ export default function IngresosPage() {
                 />
             ) : (
                 <>
-                    <Text style={styles.title}>Ingresos</Text>
+                    <View style={styles.centered}>
+                        <Text style={styles.title}>Ingresos</Text>
+                    </View>
                     <View style={styles.content}>
                         <IngresosGrid
                             key={refreshKey}
@@ -105,22 +108,23 @@ export default function IngresosPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f0f0f0',
-    },    centered: {
+        backgroundColor: colors.background,
+    },    
+    centered: {
         justifyContent: 'center',
         alignItems: 'center',
     },
     errorText: {
-        color: '#e74c3c',
+        color: colors.textPrimary,
         fontSize: 16,
         textAlign: 'center',
     },
     title: {
         fontSize: 32,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
         padding: 20,
-        backgroundColor: 'white',
+        backgroundColor: colors.background,
     },
     content: {
         flex: 1,
@@ -133,7 +137,7 @@ const styles = StyleSheet.create({
         width: 56,
         height: 56,
         borderRadius: 28,
-        backgroundColor: '#2ecc71',
+        backgroundColor: colors.buttonPrimary,
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,

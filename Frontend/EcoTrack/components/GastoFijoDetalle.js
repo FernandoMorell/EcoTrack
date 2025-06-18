@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { gastosFijosService } from '../services/ApiServices';
+import colors from '../themes/colors';
 
 export default function GastoFijoDetalle({ gasto, onClose, onUpdate }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -29,8 +30,7 @@ export default function GastoFijoDetalle({ gasto, onClose, onUpdate }) {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={styles.container}>      <View style={styles.header}>
         <TouchableOpacity onPress={onClose} style={styles.closeButton}>
           <Text style={styles.closeButtonText}>←</Text>
         </TouchableOpacity>
@@ -52,19 +52,18 @@ export default function GastoFijoDetalle({ gasto, onClose, onUpdate }) {
               onChangeText={setCantidad}
               keyboardType="numeric"
               placeholder="Cantidad"
-            />
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity 
-                style={[styles.button, styles.cancelButton]} 
-                onPress={() => setIsEditing(false)}
-              >
-                <Text style={styles.buttonText}>Cancelar</Text>
-              </TouchableOpacity>
+            />            <View style={styles.buttonContainer}>
               <TouchableOpacity 
                 style={[styles.button, styles.saveButton]} 
                 onPress={handleUpdate}
               >
                 <Text style={styles.buttonText}>Guardar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={[styles.button, styles.cancelButton]} 
+                onPress={() => setIsEditing(false)}
+              >
+                <Text style={styles.buttonText}>Cancelar</Text>
               </TouchableOpacity>
             </View>
           </>
@@ -125,21 +124,21 @@ export default function GastoFijoDetalle({ gasto, onClose, onUpdate }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: colors.background,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: colors.textSecondary,
   },
   closeButton: {
     padding: 10,
   },
   closeButtonText: {
     fontSize: 24,
-    color: '#333',
+    color: colors.textPrimary,
   },
   title: {
     fontSize: 20,
@@ -156,20 +155,20 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: colors.textSecondary,
   },
   label: {
     fontSize: 16,
-    color: '#666',
+    color: colors.textPrimary,
   },
   value: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textSecondary,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.textSecondary,
     borderRadius: 8,
     padding: 12,
     marginVertical: 8,
@@ -188,18 +187,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   editButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: colors.buttonPrimary,
     flex: 1,
     marginRight: 5,
   },
   saveButton: {
-    backgroundColor: '#2ecc71',
+    backgroundColor: colors.success,
   },
   cancelButton: {
-    backgroundColor: '#e74c3c',
+    backgroundColor: colors.error,
   },
   deleteButton: {
-    backgroundColor: '#e74c3c',
+    backgroundColor: colors.error,
     flex: 1,
     marginLeft: 5,
   },

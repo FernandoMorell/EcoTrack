@@ -4,10 +4,10 @@ import NavButton from './NavButton';
 export default function NavBar() {
     return (
         <View style={styles.navBar}>
-            <NavButton to="Home" text="Home" nested={true} />
-            <NavButton to="Ingresos" text="Ingresos" nested={true} />
-            <NavButton to="Gastos" text="Gastos" nested={true} />
-            <NavButton to="Notificaciones" text="Notificaciones" nested={true} />
+            <NavButton to="Home" icon="account-balance" nested={true} />
+            <NavButton to="Ingresos" icon="attach-money" nested={true} />
+            <NavButton to="Gastos" icon="money-off" nested={true} />
+            <NavButton to="Notificaciones" icon="notifications" nested={true} />
         </View>
     );
 }
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#fff',
+        backgroundColor: '#2C3E50',
         borderTopWidth: 1,
         borderColor: '#ccc',
     },

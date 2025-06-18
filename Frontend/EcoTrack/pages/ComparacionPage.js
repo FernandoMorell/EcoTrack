@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import ComparacionInfoMes from '../components/ComparacionInfoMes';
+import colors from '../themes/colors';
 
 export default function ComparacionPage({ route }) {
     const { user } = useAuth();
@@ -19,6 +20,6 @@ export default function ComparacionPage({ route }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: colors.background,
     },
 });

@@ -6,6 +6,7 @@ import { infoMesService } from '../services/ApiServices';
 import { dateUtils } from '../services/utils';
 import { PieChart } from 'react-native-chart-kit';
 import { useNavigation } from '@react-navigation/native';
+import colors from '../themes/colors';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -63,13 +64,13 @@ export default function HomePage() {
 
     const getTipoColor = (tipo) => {
         const colores = {
-            'Ocio': '#9b59b6',
-            'Comida': '#3498db',
-            'Ropa': '#f1c40f',
-            'Transporte': '#e67e22',
-            'Hogar': '#2ecc71',
-            'Otros': '#95a5a6',
-            'Fijo': '#f94030'
+            'Ocio': '#9B59B6',
+            'Comida': '#2980B9',
+            'Ropa': '#E67E22',
+            'Transporte': '#1ABC9C',
+            'Hogar': '#34495E',
+            'Otros': '#95A5A6',
+            'Fijo': '#F39C12'
         };
         return colores[tipo] || '#CCCCCC';
     };
@@ -148,7 +149,8 @@ export default function HomePage() {
                                         borderRadius: 16
                                     },
                                     propsForLabels: {
-                                        fontSize: "10"
+                                        fontSize: "10",
+                                        color: colors.textPrimary
                                     }
                                 }}
                                 accessor="population"
@@ -175,9 +177,10 @@ export default function HomePage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: colors.background,
         padding: 16,
-    },    header: {
+    },    
+    header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -200,18 +203,18 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        height: 48,
     },
     dateSelectorText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
     },
     compararContainer: {
         marginLeft: 10,
     },
     compararButton: {
-        backgroundColor: '#3498db',
-        padding: 10,
+        backgroundColor: colors.buttonPrimary,
         borderRadius: 8,
         shadowColor: '#000',
         shadowOffset: {
@@ -221,6 +224,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        height: 48, // Misma altura que dateSelector
+        justifyContent: 'center', // Centrar verticalmente el texto
+        paddingHorizontal: 15, // Padding horizontal en lugar de padding general
     },
     compararButtonText: {
         color: 'white',
@@ -246,13 +252,13 @@ const styles = StyleSheet.create({
     },
     statLabel: {
         fontSize: 16,
-        color: '#666',
+        color: colors.textPrimary,
         marginBottom: 4,
     },
     statValue: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
     },
     chartContainer: {
         backgroundColor: '#fff',
@@ -272,16 +278,17 @@ const styles = StyleSheet.create({
     chartTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
         marginBottom: 10,
-    },    messageContainer: {
+    },    
+    messageContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
     message: {
         fontSize: 16,
-        color: '#666',
+        color: colors.textPrimary,
         textAlign: 'center',
     },
 });

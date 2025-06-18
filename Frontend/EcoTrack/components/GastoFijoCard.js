@@ -1,4 +1,5 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import colors from '../themes/colors.js';
 
 export default function GastoFijoCard({ gasto, onPress }) {
   return (
@@ -31,11 +32,11 @@ const styles = StyleSheet.create({
   nombre: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
   },
   cantidad: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#e74c3c',
+    color: colors.error,
   },
 });

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import colors from '../themes/colors';
 
 export default function NuevoGastoDiarioModal({ visible, onClose, onSubmit, selectedDate }) {
     const [nombre, setNombre] = useState('');
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalView: {
-        backgroundColor: 'white',
+        backgroundColor: colors.background,
         borderRadius: 20,
         padding: 20,
         width: '90%',
@@ -123,14 +124,14 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
     },
     closeButton: {
         padding: 5,
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: colors.textSecondary,
         borderRadius: 8,
         padding: 12,
         marginBottom: 15,
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     },
     pickerContainer: {
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: colors.textSecondary,
         borderRadius: 8,
         marginBottom: 15,
         overflow: 'hidden',
@@ -148,11 +149,11 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     error: {
-        color: 'red',
+        color: colors.error,
         marginBottom: 10,
     },
     submitButton: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: colors.success,
         padding: 15,
         borderRadius: 8,
         alignItems: 'center',

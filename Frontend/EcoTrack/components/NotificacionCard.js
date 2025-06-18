@@ -1,5 +1,6 @@
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import colors from '../themes/colors';
 
 export default function NotificacionCard({ notificacion, onDelete, marcarLeido }) {
   return (    <View style={[
@@ -37,7 +38,8 @@ export default function NotificacionCard({ notificacion, onDelete, marcarLeido }
 }
 
 const styles = StyleSheet.create({
-  card: {    backgroundColor: 'white',
+  card: {    
+    backgroundColor: colors.background,
     padding: 15,
     borderRadius: 10,
     marginVertical: 5,
@@ -63,16 +65,16 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: colors.textPrimary,
     marginBottom: 5,
   },
   mensaje: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
   },
   fecha: {
     fontSize: 12,
-    color: '#999',
+    color: colors.textSecondary,
     marginTop: 4,
   },
   leido: {

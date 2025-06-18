@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import { ingresosService } from '../services/ApiServices';
+import colors from '../themes/colors';
 
 export default function NuevoIngresoModal({ visible, onClose, onIngresoCreated, userId }) {
   const [nombre, setNombre] = useState('');
@@ -63,18 +64,19 @@ export default function NuevoIngresoModal({ visible, onClose, onIngresoCreated, 
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity 
+              style={[styles.button, styles.submitButton]} 
+              onPress={handleSubmit}
+            >
+              <Text style={styles.buttonText}>Crear</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
               style={[styles.button, styles.cancelButton]} 
               onPress={onClose}
             >
               <Text style={styles.buttonText}>Cancelar</Text>
             </TouchableOpacity>
             
-            <TouchableOpacity 
-              style={[styles.button, styles.submitButton]} 
-              onPress={handleSubmit}
-            >
-              <Text style={styles.buttonText}>Crear</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: colors.background,
     borderRadius: 20,
     padding: 20,
     width: '90%',
@@ -101,10 +103,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: colors.textPrimary,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.textSecondary,
     borderRadius: 8,
     padding: 12,
     marginVertical: 8,
@@ -122,10 +125,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   submitButton: {
-    backgroundColor: '#2ecc71',
+    backgroundColor: colors.success,
   },
   cancelButton: {
-    backgroundColor: '#e74c3c',
+    backgroundColor: colors.error,
   },
   buttonText: {
     color: 'white',

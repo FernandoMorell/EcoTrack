@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { gastosDiariosService } from '../services/ApiServices';
+import colors from '../themes/colors';
 
 export default function GastoDiarioDetalle({ gasto, onClose, onUpdate }) {
     const [isEditing, setIsEditing] = useState(false);
@@ -82,16 +83,16 @@ export default function GastoDiarioDetalle({ gasto, onClose, onUpdate }) {
                         </View>
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity 
-                                style={[styles.button, styles.cancelButton]} 
-                                onPress={() => setIsEditing(false)}
-                            >
-                                <Text style={styles.buttonText}>Cancelar</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity 
                                 style={[styles.button, styles.saveButton]} 
                                 onPress={handleUpdate}
                             >
                                 <Text style={styles.buttonText}>Guardar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity 
+                                style={[styles.button, styles.cancelButton]} 
+                                onPress={() => setIsEditing(false)}
+                            >
+                                <Text style={styles.buttonText}>Cancelar</Text>
                             </TouchableOpacity>
                         </View>
                     </>
@@ -163,26 +164,27 @@ export default function GastoDiarioDetalle({ gasto, onClose, onUpdate }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
+        backgroundColor: colors.background,
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 15,
         borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+        borderBottomColor: colors.textSecondary,
     },
     closeButton: {
         padding: 10,
     },
     closeButtonText: {
         fontSize: 24,
-        color: '#333',
+        color: colors.textPrimary,
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
         marginLeft: 15,
+        color: colors.textPrimary,
     },
     content: {
         padding: 20,
@@ -194,16 +196,16 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         paddingVertical: 10,
         borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+        borderBottomColor: colors.textSecondary,
     },
     label: {
         fontSize: 16,
-        color: '#666',
+        color: colors.textPrimary,
     },
     value: {
         fontSize: 16,
         fontWeight: '600',
-        color: '#333',
+        color: colors.textPrimary,
     },
     input: {
         borderWidth: 1,
@@ -236,18 +238,18 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
     editButton: {
-        backgroundColor: '#3498db',
+        backgroundColor: colors.buttonPrimary,
         flex: 1,
         marginRight: 5,
     },
     saveButton: {
-        backgroundColor: '#2ecc71',
+        backgroundColor: colors.success,
     },
     cancelButton: {
-        backgroundColor: '#e74c3c',
+        backgroundColor: colors.error,
     },
     deleteButton: {
-        backgroundColor: '#e74c3c',
+        backgroundColor: colors.error,
         flex: 1,
         marginLeft: 5,
     },

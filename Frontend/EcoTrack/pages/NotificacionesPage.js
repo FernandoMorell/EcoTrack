@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { useAuth } from '../context/AuthContext';
 import NotificacionesGrid from '../components/NotificacionesGrid';
 import { notificacionesService } from '../services/ApiServices';
+import colors from '../themes/colors';
 
 export default function NotificacionesPage() {
     const { user } = useAuth();
@@ -75,7 +76,9 @@ export default function NotificacionesPage() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Notificaciones</Text>
+            <View style={styles.centered}>
+                <Text style={styles.title}>Notificaciones</Text>
+            </View>
             <View style={styles.content}>
                 <NotificacionesGrid
                     notificaciones={notificaciones}
@@ -90,7 +93,7 @@ export default function NotificacionesPage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: colors.background,
     },
     centered: {
         justifyContent: 'center',
@@ -99,16 +102,16 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 32,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
         padding: 20,
-        backgroundColor: 'white',
+        backgroundColor: colors.background,
     },
     content: {
         flex: 1,
         position: 'relative',
     },
     errorText: {
-        color: '#e74c3c',
+        color: colors.error,
         fontSize: 16,
         textAlign: 'center',
     },

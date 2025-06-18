@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import NotificacionCard from './NotificacionCard';
+import colors from '../themes/colors';
 
 export default function NotificacionesGrid({ notificaciones, onDelete, marcarLeido }) {
     const renderItem = ({ item }) => (
@@ -34,7 +35,7 @@ export default function NotificacionesGrid({ notificaciones, onDelete, marcarLei
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: colors.background,
     },
     emptyState: {
         flex: 1,
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
     },
     emptyStateText: {
         fontSize: 16,
-        color: '#666',
+        color: colors.textSecondary,
         textAlign: 'center',
     },
 });

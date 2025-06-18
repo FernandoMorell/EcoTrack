@@ -1,15 +1,17 @@
 import { Image, View, StyleSheet } from 'react-native';
 import NavButton from './NavButton.js';
+import colors from '../themes/colors.js';
 
 export default function Header() {
     return (
         <View style={styles.container}>
             <Image
-                source={require('../assets/icon.png')}
-                style={ styles.icon }
-            />
+                source={require('../assets/Icon.png')}
+                style={styles.icon}
+            >
+            </Image>
             
-            <NavButton to="Profile" text="Perfil" nested={true} />
+            <NavButton to="Profile" icon="person" nested={true} />
             
         </View>
         
@@ -23,6 +25,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20,
         paddingTop: 20,
+        backgroundColor: colors.header,
     },
     icon: {
         width: 40,

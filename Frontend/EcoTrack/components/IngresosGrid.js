@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { ingresosService } from '../services/ApiServices';
 import IngresoCard from './IngresoCard';
+import colors from '../themes/colors';
 
 export default function IngresosGrid({ userId, onIngresoPress }) {
   const [ingresos, setIngresos] = useState([]);
@@ -67,7 +68,7 @@ export default function IngresosGrid({ userId, onIngresoPress }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: colors.background, 
   },
   centerContainer: {
     flex: 1,
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   errorText: {
-    color: '#e74c3c',
+    color: colors.textPrimary,
     fontSize: 16,
     textAlign: 'center',
   }

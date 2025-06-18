@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Pressable, TextInput, Alert } from 'react-nativ
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { userService } from '../services/ApiServices';
+import colors from '../themes/colors';
 
 export default function ProfilePage() {
     const { user, logout } = useAuth();
@@ -53,73 +54,92 @@ export default function ProfilePage() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.profileSection}>
-                <Text style={styles.label}>Usuario</Text>
-                <Text style={styles.userName}>{user?.name || 'Usuario'}</Text>
-            </View>
+            <View>
+                <View style={styles.profileSection}>
+                    <Text style={styles.label}>Usuario</Text>
+                    <Text style={styles.userName}>{user?.name || 'Usuario'}</Text>
+                    {user?.email && (
+                        <Text style={styles.userEmail}>{user.email}</Text>
+                    )}
+                </View>
 
-            <View style={styles.profileSection}>
-                <Text style={styles.label}>Límite Diario de Gastos</Text>
-                {editandoLimite ? (
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.input}
-                            value={limiteDiario}
-                            onChangeText={setLimiteDiario}
-                            keyboardType="numeric"
-                            placeholder="Introduce el límite diario"
-                        />
-                        <View style={styles.buttonContainer}>
+                <View style={styles.profileSection}>
+                    <Text style={styles.label}>Límite Diario de Gastos</Text>
+                    {editandoLimite ? (
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.input}
+                                value={limiteDiario}
+                                onChangeText={setLimiteDiario}
+                                keyboardType="numeric"
+                                placeholder="Introduce el límite diario"
+                            />
+                            <View style={styles.buttonContainer}>
+                                <Pressable 
+                                    style={[styles.button, styles.saveButton]} 
+                                    onPress={handleLimiteDiario}
+                                >
+                                    <Text style={styles.buttonText}>Guardar</Text>
+                                </Pressable>
+                                <Pressable 
+                                    style={[styles.button, styles.cancelButton]} 
+                                    onPress={() => {
+                                        setEditandoLimite(false);
+                                        setLimiteDiario(limiteActual.toString());
+                                    }}
+                                >
+                                    <Text style={styles.buttonText}>Cancelar</Text>
+                                </Pressable>
+                            </View>
+                        </View>
+                    ) : (
+                        <View style={styles.valueContainer}>
+                            <Text style={styles.value}>
+                                {limiteActual > 0 ? `${limiteActual}€` : 'Sin límite'}
+                            </Text>
                             <Pressable 
-                                style={[styles.button, styles.saveButton]} 
-                                onPress={handleLimiteDiario}
+                                style={[styles.button, styles.editButton]} 
+                                onPress={() => setEditandoLimite(true)}
                             >
-                                <Text style={styles.buttonText}>Guardar</Text>
-                            </Pressable>
-                            <Pressable 
-                                style={[styles.button, styles.cancelButton]} 
-                                onPress={() => {
-                                    setEditandoLimite(false);
-                                    setLimiteDiario(limiteActual.toString());
-                                }}
-                            >
-                                <Text style={styles.buttonText}>Cancelar</Text>
+                                <Text style={styles.buttonText}>Editar</Text>
                             </Pressable>
                         </View>
-                    </View>
-                ) : (
-                    <View style={styles.valueContainer}>
-                        <Text style={styles.value}>
-                            {limiteActual > 0 ? `${limiteActual}€` : 'Sin límite'}
-                        </Text>
-                        <Pressable 
-                            style={[styles.button, styles.editButton]} 
-                            onPress={() => setEditandoLimite(true)}
-                        >
-                            <Text style={styles.buttonText}>Editar</Text>
-                        </Pressable>
-                    </View>
-                )}
+                    )}
+                </View>
             </View>
-            
-            <Pressable 
-                style={({ pressed }) => [
-                    styles.logoutButton,
-                    { backgroundColor: pressed ? '#d32f2f' : '#f44336' }
-                ]}
-                onPress={handleLogout}
-            >
-                <Text style={styles.logoutText}>Cerrar Sesión</Text>
-            </Pressable>
+
+            <View style={styles.logoutContainer}>
+                <Pressable 
+                    style={({ pressed }) => [
+                        styles.logoutButton,
+                        { backgroundColor: pressed ? '#d32f2f' : '#f44336' }
+                    ]}
+                    onPress={handleLogout}
+                >
+                    <Text style={styles.logoutText}>Cerrar Sesión</Text>
+                </Pressable>
+            </View>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#f5f5f5',
+    flex: 1,
+    padding: 20,
+    justifyContent: 'space-between',
+    backgroundColor: colors.background,
+    },
+    logoutContainer: {
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    logoutButton: {
+        backgroundColor: colors.error,
+        padding: 15,
+        borderRadius: 8,
+        alignItems: 'center',
+        width: 160,
     },
     profileSection: {
         backgroundColor: '#fff',
@@ -137,20 +157,20 @@ const styles = StyleSheet.create({
     },
     label: {
         fontSize: 16,
-        color: '#666',
+        color: colors.textPrimary,
         marginBottom: 5,
     },
     userName: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
     },
     inputContainer: {
         marginTop: 10,
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: colors.textSecondary,
         borderRadius: 8,
         padding: 12,
         fontSize: 16,
@@ -169,7 +189,7 @@ const styles = StyleSheet.create({
     value: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
+        color: colors.textPrimary,
     },
     button: {
         padding: 10,
@@ -179,27 +199,20 @@ const styles = StyleSheet.create({
         marginHorizontal: 5,
     },
     editButton: {
-        backgroundColor: '#3498db',
+        backgroundColor: colors.buttonPrimary,
         flex: 0,
         paddingHorizontal: 20,
     },
     saveButton: {
-        backgroundColor: '#2ecc71',
+        backgroundColor: colors.success,
     },
     cancelButton: {
-        backgroundColor: '#e74c3c',
+        backgroundColor: colors.error,
     },
     buttonText: {
         color: '#fff',
         fontSize: 14,
         fontWeight: 'bold',
-    },
-    logoutButton: {
-        backgroundColor: '#f44336',
-        padding: 15,
-        borderRadius: 8,
-        alignItems: 'center',
-        marginTop: 20,
     },
     logoutText: {
         color: '#fff',

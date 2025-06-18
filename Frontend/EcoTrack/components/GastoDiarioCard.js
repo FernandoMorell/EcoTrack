@@ -1,20 +1,21 @@
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import colors from '../themes/colors.js';
 
 export default function GastoDiarioCard({ gasto, onPress }) {
   const getTipoColor = (tipo) => {
     switch (tipo) {
       case 'Comida':
-        return '#3498db';
+        return '#2980B9';
       case 'Ocio':
-        return '#9b59b6';
+        return '#9B59B6';
       case 'Ropa':
-        return '#f1c40f';
-    case 'Transporte':
-        return '#e67e22';
-    case 'Hogar':
-        return '#2ecc71';
+        return '#E67E22';
+      case 'Transporte':
+        return '#1ABC9C';
+      case 'Hogar':
+        return '#34495E';
       default:
-        return '#95a5a6';
+        return '#95A5A6';
     }
   };
 
@@ -64,16 +65,16 @@ const styles = StyleSheet.create({
   nombre: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#333',
+    color: colors.textPrimary,
   },
   tipo: {
     fontSize: 14,
-    color: '#666',
+    color: colors.textSecondary,
     marginTop: 2,
   },
   cantidad: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#e74c3c',
+    color: colors.error,
   },
 });
