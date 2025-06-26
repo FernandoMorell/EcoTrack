@@ -7,7 +7,7 @@ import colors from '../themes/colors';
 export default function NuevoGastoDiarioModal({ visible, onClose, onSubmit, selectedDate }) {
     const [nombre, setNombre] = useState('');
     const [cantidad, setCantidad] = useState('');
-    const [tipo, setTipo] = useState('Comida');
+    const [tipo, setTipo] = useState('');
     const [error, setError] = useState('');
 
     const tiposGasto = ['Comida', 'Ropa', 'Ocio', 'Transporte', 'Hogar', 'Otros'];
@@ -32,7 +32,7 @@ export default function NuevoGastoDiarioModal({ visible, onClose, onSubmit, sele
         // Reset form
         setNombre('');
         setCantidad('');
-        setTipo('Comida');
+        setTipo('');
         setError('');
         onClose();
     };
@@ -56,6 +56,7 @@ export default function NuevoGastoDiarioModal({ visible, onClose, onSubmit, sele
                     <TextInput
                         style={styles.input}
                         placeholder="Nombre del gasto"
+                        placeholderTextColor={colors.textSecondary}
                         value={nombre}
                         onChangeText={setNombre}
                     />
@@ -63,6 +64,7 @@ export default function NuevoGastoDiarioModal({ visible, onClose, onSubmit, sele
                     <TextInput
                         style={styles.input}
                         placeholder="Cantidad"
+                        placeholderTextColor={colors.textSecondary}
                         value={cantidad}
                         onChangeText={setCantidad}
                         keyboardType="numeric"
@@ -74,8 +76,9 @@ export default function NuevoGastoDiarioModal({ visible, onClose, onSubmit, sele
                             onValueChange={(itemValue) => setTipo(itemValue)}
                             style={styles.picker}
                         >
+                            <Picker.Item style={styles.pickerText} label="Selecciona un tipo" value="" enable={false}/>
                             {tiposGasto.map((tipo) => (
-                                <Picker.Item key={tipo} label={tipo} value={tipo} />
+                                <Picker.Item style={styles.pickerText} key={tipo} label={tipo} value={tipo} />
                             ))}
                         </Picker>
                     </View>
@@ -100,6 +103,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    pickerText: {
+        color: colors.textSecondary,
     },
     modalView: {
         backgroundColor: colors.background,

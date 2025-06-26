@@ -50,6 +50,7 @@ export default function NuevoIngresoModal({ visible, onClose, onIngresoCreated, 
           <TextInput
             style={styles.input}
             placeholder="Nombre del ingreso"
+            placeholderTextColor={colors.textSecondary}
             value={nombre}
             onChangeText={setNombre}
           />
@@ -57,6 +58,7 @@ export default function NuevoIngresoModal({ visible, onClose, onIngresoCreated, 
           <TextInput
             style={styles.input}
             placeholder="Cantidad"
+            placeholderTextColor={colors.textSecondary}
             value={cantidad}
             onChangeText={setCantidad}
             keyboardType="numeric"

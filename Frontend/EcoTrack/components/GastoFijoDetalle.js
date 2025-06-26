@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.textSecondary,
+    color: colors.textPrimary,
   },
   input: {
     borderWidth: 1,

@@ -3,11 +3,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Configuración de Axios para la API
 const api = axios.create({
-    baseURL: 'http://192.168.18.29:3000',
+    baseURL: 'https://wallaby-novel-chigger.ngrok-free.app',
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 5000  // Timeout de 5 segundos
+    timeout: 15000  // Timeout de 15 segundos
 });
 
 // Interceptor para añadir el token y manejar errores
@@ -25,34 +25,25 @@ api.interceptors.request.use(
 );
 
 // Interceptor para manejar errores y refrescar token
-api.interceptors.response.use(
+export const setupInterceptors = (logout) => {
+  api.interceptors.response.use(
     (response) => response,
     async (error) => {
-        const originalRequest = error.config;
+      const originalRequest = error.config;
 
-        // Si el error es 401 (Unauthorized) y no hemos intentado refrescar el token
-        if (error.response?.status === 403 && !originalRequest._retry) {
-            originalRequest._retry = true;
+      if (error.response?.status === 403 && !originalRequest._retry) {
+        originalRequest._retry = true;
 
-            try {
-                const newToken = await refreshAccessToken();
-                originalRequest.headers['x-auth-token'] = newToken;
-                return api(originalRequest);
-            } catch (refreshError) {
-                // Si no se puede refrescar el token, limpiamos el storage y forzamos logout
-                await AsyncStorage.multiRemove([
-                    '@ecotrack:token',
-                    '@ecotrack:refreshToken',
-                    '@ecotrack:user'
-                ]);
-                // Redirigir al login (esto debe ser manejado por el componente)
-                throw new Error('Session expired');
-            }
-        }
+        // Directamente hacer logout
+        await logout();
 
-        return Promise.reject(error);
+        return Promise.reject(new Error('Sesión expirada. Por favor vuelve a iniciar sesión.'));
+      }
+
+      return Promise.reject(error);
     }
-);
+  );
+};
 
 // Función para refrescar el token
 const refreshAccessToken = async () => {
@@ -60,7 +51,7 @@ const refreshAccessToken = async () => {
         const refreshToken = await AsyncStorage.getItem('@ecotrack:refreshToken');
         if (!refreshToken) throw new Error('No refresh token available');
 
-        const response = await axios.post('http://localhost:3000/auth/refresh', {
+        const response = await axios.post('https://ecotrack-dxy4.onrender.com/auth/refresh', {
             token: refreshToken
         });
 
@@ -75,8 +66,17 @@ const refreshAccessToken = async () => {
 // Servicios de autenticación
 export const authService = {
     login: async (name, password) => {
-        const response = await api.post('/auth/login', { name, password });
-        return response.data;
+         try {
+            const response = await api.post('/auth/login', { name, password });
+            console.log('Respuesta de login:', response.data);
+            return response.data;
+        } catch (err) {
+            console.error('Error en login:', err?.message || err);
+            if (err?.response) {
+                console.log('Detalles del error:', err.response.data);
+            }
+            throw err;
+    }
     },
 
     register: async (name, email, password) => {

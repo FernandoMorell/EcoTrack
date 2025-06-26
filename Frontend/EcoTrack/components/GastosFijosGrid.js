@@ -15,7 +15,7 @@ export default function GastosFijosGrid({ gastosFijos, onGastoPress, onAddPress 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <Text style={styles.title}>Gastos Fijos</Text>
+                <Text style={styles.title}>Gastos Fijos Mensuales</Text>
                 <TouchableOpacity onPress={onAddPress} style={styles.addButton}>
                     <MaterialIcons name="add" size={24} color={colors.buttonPrimary} />
                 </TouchableOpacity>

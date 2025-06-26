@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Dimensions, ActivityIndicator } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useAuth } from '../context/AuthContext';
 import { infoMesService } from '../services/ApiServices';
@@ -16,7 +16,7 @@ export default function HomePage() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [isDatePickerVisible, setDatePickerVisible] = useState(false);
     const [infoMes, setInfoMes] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [isloading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const fetchInfoMes = async (mes) => {
@@ -75,11 +75,18 @@ export default function HomePage() {
         return colores[tipo] || '#CCCCCC';
     };
 
-    if (loading) return <Text style={styles.message}>Cargando...</Text>;
+    if (isloading) {
+        return (
+            <View style={[styles.container, styles.centered]}>
+                <ActivityIndicator size="large" color="#2ecc71" />
+            </View>
+        );
+    }
     if (error) return <Text style={styles.message}>{error}</Text>;
 
     return (
-        <View style={styles.container}>            <View style={styles.header}>
+        <View style={styles.container}>            
+        <View style={styles.header}>
                 <View style={styles.dateSelectorContainer}>
                     <Pressable 
                         onPress={() => setDatePickerVisible(true)}
@@ -167,7 +174,7 @@ export default function HomePage() {
                 </View>
             ) : (
                 <View style={styles.messageContainer}>
-                    <Text style={styles.message}>No hay datos disponibles para este mes.</Text>
+                    <Text style={styles.message}>No hay datos disponibles para este mes.{"\n"}(Genera gastos diarios para obtener info)</Text>
                 </View>
             )}
         </View>
@@ -180,6 +187,10 @@ const styles = StyleSheet.create({
         backgroundColor: colors.background,
         padding: 16,
     },    
+    centered: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -240,7 +251,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 16,
         borderRadius: 8,
-        marginBottom: 12,
+        marginBottom: 10,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -264,7 +275,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         padding: 16,
         borderRadius: 8,
-        marginTop: 20,
+        marginTop: 10,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {

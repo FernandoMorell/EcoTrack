@@ -44,26 +44,24 @@ export default function ComparacionInfoMes({ userId, mesInicial }) {
         if (mes2) {
             cargarInfoMes(mes2, setInfoMes2);
         }
-    }, [mes2]);    const calcularTotales = (infoMes) => {
+    }, [mes2]);    
+    
+   const calcularTotales = (infoMes) => {
         if (!infoMes) return { totalGastos: 0, totalIngresos: 0, balance: 0 };
-        
-        const totalGastos = [...(infoMes.gastosFijos || []), ...(infoMes.gastosDiarios || [])]
-            .reduce((sum, gasto) => sum + gasto.cantidad, 0);
-        
-        // infoMes.ingresos podría ser directamente el número
-        const totalIngresos = typeof infoMes.ingresos === 'number' 
-            ? infoMes.ingresos 
-            : Array.isArray(infoMes.ingresos) 
-                ? infoMes.ingresos.reduce((sum, ingreso) => sum + ingreso.cantidad, 0)
-                : 0;
-        
+
+        // Sumar todos los valores del objeto infoMes.gastos
+        const totalGastos = infoMes.gastos
+            ? Object.values(infoMes.gastos).reduce((sum, cantidad) => sum + cantidad, 0)
+            : 0;
+
+        const totalIngresos = typeof infoMes.ingresos === 'number' ? infoMes.ingresos : 0;
+
         return {
             totalGastos,
             totalIngresos,
             balance: totalIngresos - totalGastos
         };
     };
-
     const renderComparacion = () => {
         const totales1 = calcularTotales(infoMes1);
         const totales2 = calcularTotales(infoMes2);
@@ -128,9 +126,10 @@ export default function ComparacionInfoMes({ userId, mesInicial }) {
                         onValueChange={setMes1}
                         style={styles.picker}
                     >
-                        <Picker.Item label="Selecciona un mes" value="" />
+                        <Picker.Item style={styles.pickerText} label="Selecciona un mes" value="" />
                         {getMesesDisponibles().map(mes => (
                             <Picker.Item 
+                                style={styles.pickerText}
                                 key={mes} 
                                 label={new Date(mes).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })} 
                                 value={mes} 
@@ -146,9 +145,10 @@ export default function ComparacionInfoMes({ userId, mesInicial }) {
                         onValueChange={setMes2}
                         style={styles.picker}
                     >
-                        <Picker.Item label="Selecciona un mes" value="" />
+                        <Picker.Item style={styles.pickerText} label="Selecciona un mes" value="" enable={false}/>
                         {getMesesDisponibles().map(mes => (
                             <Picker.Item 
+                                style={styles.pickerText}
                                 key={mes} 
                                 label={new Date(mes).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' })} 
                                 value={mes} 
@@ -168,6 +168,9 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: colors.background,
+    },
+    pickerText: {
+        color: colors.textSecondary,
     },
     header: {
         flexDirection: 'row',

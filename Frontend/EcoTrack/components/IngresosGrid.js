@@ -50,6 +50,7 @@ export default function IngresosGrid({ userId, onIngresoPress }) {
 
   return (
     <View style={styles.container}>
+      {ingresos.length > 0 ? (
       <FlatList
         data={ingresos}
         renderItem={({ item }) => (
@@ -60,7 +61,11 @@ export default function IngresosGrid({ userId, onIngresoPress }) {
         )}
         keyExtractor={item => item._id}
         contentContainerStyle={styles.gridContent}
-      />
+      />) : (
+      <View style={styles.centerContainer}>
+        <Text style={styles.errorText}>No hay ingresos disponibles</Text>
+      </View>
+      )}
     </View>
   );
 }

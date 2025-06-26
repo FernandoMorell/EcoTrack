@@ -78,7 +78,7 @@ export default function IngresosPage() {
             ) : (
                 <>
                     <View style={styles.centered}>
-                        <Text style={styles.title}>Ingresos</Text>
+                        <Text style={styles.title}>Ingresos Mensuales</Text>
                     </View>
                     <View style={styles.content}>
                         <IngresosGrid

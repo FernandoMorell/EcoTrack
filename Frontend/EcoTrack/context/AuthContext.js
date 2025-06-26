@@ -1,6 +1,6 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { authService } from '../services/ApiServices';
+import { authService, setupInterceptors } from '../services/ApiServices';
 
 const AuthContext = createContext();
 
@@ -15,6 +15,10 @@ export function AuthProvider({ children }) {
     const [token, setToken] = useState(null);
     const [refreshToken, setRefreshToken] = useState(null);   
     
+    useEffect(() => {
+        setupInterceptors(logout);
+    }, []);
+
     const login = async (name, password) => {
         try {
             const data = await authService.login(name, password);
@@ -78,14 +82,22 @@ export function AuthProvider({ children }) {
             const savedRefreshToken = refreshTokenResult[1];
 
             if (savedUser && savedToken && savedRefreshToken) {
+                setUser(JSON.parse(savedUser));
+                setToken(savedToken);
+                setRefreshToken(savedRefreshToken);
                 return true;
             }
+
+            // Limpiar estado si faltan datos
+            setUser(null);
+            setToken(null);
+            setRefreshToken(null);
             return false;
         } catch (error) {
             console.error('Error checking auth:', error);
             return false;
         }
-    };    
+    };
     
     return (
         <AuthContext.Provider value={{ 

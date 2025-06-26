@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, SectionList, TouchableOpacity, Text, Alert } from 'react-native';
+import { View, StyleSheet, SectionList, TouchableOpacity, Text, Alert, ActivityIndicator } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useAuth } from '../context/AuthContext';
 import GastosFijosGrid from '../components/GastosFijosGrid';
@@ -22,9 +22,12 @@ export default function GastosPage() {
     const [showNuevoGastoFijo, setShowNuevoGastoFijo] = useState(false);
     const [showNuevoGastoDiario, setShowNuevoGastoDiario] = useState(false);
     const [limiteDiario, setLimiteDiario] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        setIsLoading(true);
         loadGastos();
+        setIsLoading(false);
     }, []);
 
     useEffect(() => {
@@ -89,7 +92,8 @@ export default function GastosPage() {
         const gastosDelDia = gastosDiarios.reduce((total, gasto) => total + gasto.cantidad, 0);
         const totalConNuevoGasto = gastosDelDia + nuevoGasto;
         
-        if (totalConNuevoGasto > limiteDiario) {            try {
+        if (totalConNuevoGasto > limiteDiario) {            
+            try {
                 await notificacionesService.createNotificacion({
                     titulo: '¡Límite diario excedido!',
                     mensaje: `Has superado tu límite diario de ${limiteDiario}€ el ${selectedDate.toLocaleDateString()}.`,
@@ -171,6 +175,14 @@ export default function GastosPage() {
         setSelectedGastoDiario(null);
         loadGastos();
     };
+
+    if(isLoading) {
+        return (
+            <View style={[styles.container, styles.centered]}>
+                <ActivityIndicator size="large" color="#2ecc71" />
+            </View>
+        );
+    }
 
     const getSectionsData = () => {
         return [
@@ -272,6 +284,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.background,
+    },
+    centered: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     dateButton: {
         backgroundColor: 'white',

@@ -8,36 +8,46 @@ import GastosPage from './GastosPage';
 import NotificacionesPage from './NotificacionesPage';
 import ProfilePage from './ProfilePage';
 import ComparacionPage from './ComparacionPage';
+import { useSafeAreaInsets  } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator();
 
+
 export default function Layout() {
+    const insets = useSafeAreaInsets();
     return (
-        <View style={styles.container}>
-            <View style={styles.headerContainer}>
-                <Header />
+  
+            <View style={[styles.container, {
+                paddingTop: insets.top,
+                paddingBottom: insets.bottom,
+                paddingLeft: insets.left,
+                paddingRight: insets.right,
+            }]}>
+                <View style={styles.headerContainer}>
+                    <Header />
+                </View>
+                
+                <View style={styles.contentContainer}>
+                    <Stack.Navigator
+                        initialRouteName="Home"
+                        screenOptions={{
+                            headerShown: false
+                        }}
+                    >
+                        <Stack.Screen name="Home" component={HomePage} />
+                        <Stack.Screen name="Ingresos" component={IngresosPage} />
+                        <Stack.Screen name="Gastos" component={GastosPage} />
+                        <Stack.Screen name="Notificaciones" component={NotificacionesPage} />
+                        <Stack.Screen name="Comparacion" component={ComparacionPage} />
+                        <Stack.Screen name="Profile" component={ProfilePage} />
+                    </Stack.Navigator>
+                </View>
+                
+                <View style={styles.navContainer}>
+                    <NavBar />
+                </View>
             </View>
-            
-            <View style={styles.contentContainer}>
-                <Stack.Navigator
-                    initialRouteName="Home"
-                    screenOptions={{
-                        headerShown: false
-                    }}
-                >
-                    <Stack.Screen name="Home" component={HomePage} />
-                    <Stack.Screen name="Ingresos" component={IngresosPage} />
-                    <Stack.Screen name="Gastos" component={GastosPage} />
-                    <Stack.Screen name="Notificaciones" component={NotificacionesPage} />
-                    <Stack.Screen name="Comparacion" component={ComparacionPage} />
-                    <Stack.Screen name="Profile" component={ProfilePage} />
-                </Stack.Navigator>
-            </View>
-            
-            <View style={styles.navContainer}>
-                <NavBar />
-            </View>
-        </View>
+   
     );
 }
 
@@ -64,11 +74,10 @@ const styles = StyleSheet.create({
     },
     contentContainer: {
         flex: 1,
-        marginTop: 65, 
-        marginBottom: 65,
+        paddingTop: 30,
     },
     navContainer: {
-        position: 'absolute',
+
         bottom: 0,
         left: 0,
         right: 0,

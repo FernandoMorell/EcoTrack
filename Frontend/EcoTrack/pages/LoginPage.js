@@ -4,21 +4,31 @@ import Header from '../components/Header';
 import LoginMenu from '../components/LoginMenu';
 import RegisterMenu from '../components/RegisterMenu';
 import colors from '../themes/colors';
+import { useSafeAreaInsets  } from 'react-native-safe-area-context';
+
+
 
 export default function LoginPage() {
     const [currentView, setCurrentView] = useState('login');
-
+    const insets = useSafeAreaInsets();
     return (
-        <View style={styles.container}>
+      
+            <View style={[styles.container, {
+                paddingTop: insets.top,
+                paddingBottom: insets.bottom,
+                paddingLeft: insets.left,
+                paddingRight: insets.right,
+            }]}>
 
-            <View style={styles.contentContainer}>
-                {currentView === 'login' ? (
-                    <LoginMenu onSwitchToRegister={() => setCurrentView('register')} />
-                ) : (
-                    <RegisterMenu onBack={() => setCurrentView('login')} />
-                )}
+                <View style={styles.contentContainer}>
+                    {currentView === 'login' ? (
+                        <LoginMenu onSwitchToRegister={() => setCurrentView('register')} />
+                    ) : (
+                        <RegisterMenu onBack={() => setCurrentView('login')} />
+                    )}
+                </View>
             </View>
-        </View>
+     
     );
 }
 

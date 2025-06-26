@@ -20,10 +20,16 @@
         "foregroundImage": "./assets/Splash_icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.ferbo.EcoTrack"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fbce22fe-b10f-4c41-95b8-8d0999c7be43"
+      }
     }
   }
 }

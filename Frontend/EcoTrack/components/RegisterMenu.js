@@ -34,6 +34,7 @@ export default function RegisterMenu({ onBack }) {
             <TextInput
                 style={styles.input}
                 placeholder="Usuario"
+                placeholderTextColor={colors.textSecondary}
                 value={formData.name}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, name: text }))}
             />
@@ -41,6 +42,7 @@ export default function RegisterMenu({ onBack }) {
             <TextInput
                 style={styles.input}
                 placeholder="Email"
+                placeholderTextColor={colors.textSecondary}
                 keyboardType="email-address"
                 value={formData.email}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, email: text }))}
@@ -49,6 +51,7 @@ export default function RegisterMenu({ onBack }) {
             <TextInput
                 style={styles.input}
                 placeholder="Contraseña"
+                placeholderTextColor={colors.textSecondary}
                 secureTextEntry
                 value={formData.password}
                 onChangeText={(text) => setFormData(prev => ({ ...prev, password: text }))}
@@ -93,6 +96,7 @@ const styles = StyleSheet.create({
         marginBottom: 12,
         borderWidth: 1,
         borderColor: colors.textSecondary,
+        color: colors.textSecondary,
     },
     registerButton: {
         backgroundColor: colors.buttonPrimary,

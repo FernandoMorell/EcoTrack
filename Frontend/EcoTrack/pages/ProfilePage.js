@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, Pressable, TextInput, Alert, ActivityIndicator } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { userService } from '../services/ApiServices';
@@ -9,11 +9,14 @@ export default function ProfilePage() {
     const [limiteDiario, setLimiteDiario] = useState('');
     const [editandoLimite, setEditandoLimite] = useState(false);
     const [limiteActual, setLimiteActual] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        setIsLoading(true);
         if (user) {
             cargarLimiteDiario();
         }
+        setIsLoading(false);
     }, [user]);
 
     const cargarLimiteDiario = async () => {
@@ -51,6 +54,14 @@ export default function ProfilePage() {
     const handleLogout = async () => {
         await logout();
     };
+
+    if (isLoading) {
+        return (
+            <View style={[styles.container, styles.centered]}>
+                <ActivityIndicator size="large" color="#2ecc71" />
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -125,10 +136,14 @@ export default function ProfilePage() {
 
 const styles = StyleSheet.create({
     container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: 'space-between',
-    backgroundColor: colors.background,
+        flex: 1,
+        padding: 20,
+        justifyContent: 'space-between',
+        backgroundColor: colors.background,
+    },
+    centered: {
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     logoutContainer: {
         alignItems: 'center',

@@ -6,8 +6,11 @@ import { useEffect, useState } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './pages/Layout.js';
 import LoginPage from './pages/LoginPage.js';
+import { enableScreens } from 'react-native-screens';
 import { userService } from './services/ApiServices';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+enableScreens();
 const Stack = createNativeStackNavigator();
 
 function AppContent() {
@@ -16,8 +19,13 @@ function AppContent() {
 
     useEffect(() => {
         const init = async () => {
-            await checkAuth();
-            setIsLoading(false);
+            try {
+                await checkAuth();
+            } catch (e) {
+                console.error('Fallo en checkAuth:', e);
+            } finally {
+                setIsLoading(false);
+            }
         };
         init();
     }, []);    
@@ -33,7 +41,7 @@ function AppContent() {
     }
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaProvider style={styles.safeArea}>
             <StatusBar style="auto" />
             <NavigationContainer>                
               <Stack.Navigator
@@ -54,7 +62,7 @@ function AppContent() {
                     )}
                 </Stack.Navigator>
             </NavigationContainer>
-        </SafeAreaView>
+        </SafeAreaProvider>
     );
 }
 
@@ -70,7 +78,6 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: '#fff',
-        marginTop: StatusBar.currentHeight || 0,
     },
     loadingContainer: {
         flex: 1,

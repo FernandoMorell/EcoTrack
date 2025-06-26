@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Types } from 'mongoose'
 import InfoMes from '../schemas/InfoMes.js'
 import connectDB from '../db.js'
 
@@ -101,17 +101,17 @@ export class InfoMesModel {
         user: userId
       })
       // Obtener todos los ingresos y gastos fijos en una sola operación
+      const userObjectId = Types.ObjectId.createFromHexString(userId)
       const [ingresos, gastosFijos] = await Promise.all([
         mongoose.model('Ingreso').aggregate([
-          { $match: { user: userId } },
+          { $match: { user: userObjectId } },
           { $group: { _id: null, totalIngresos: { $sum: '$cantidad' } } }
         ]),
         mongoose.model('GastoFijo').aggregate([
-          { $match: { user: userId } },
+          { $match: { user: userObjectId } },
           { $group: { _id: null, totalGastosFijos: { $sum: '$cantidad' } } }
         ])
       ])
-
       // Aplicar los totales al nuevo InfoMes
       if (ingresos.length > 0) {
         infoMes.ingresos = ingresos[0].totalIngresos

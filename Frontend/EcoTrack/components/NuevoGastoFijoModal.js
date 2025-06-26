@@ -51,6 +51,7 @@ export default function NuevoGastoFijoModal({ visible, onClose, onSubmit }) {
                     <TextInput
                         style={styles.input}
                         placeholder="Nombre del gasto"
+                        placeholderTextColor={colors.textSecondary}
                         value={nombre}
                         onChangeText={setNombre}
                     />
@@ -58,6 +59,7 @@ export default function NuevoGastoFijoModal({ visible, onClose, onSubmit }) {
                     <TextInput
                         style={styles.input}
                         placeholder="Cantidad"
+                        placeholderTextColor={colors.textSecondary}
                         value={cantidad}
                         onChangeText={setCantidad}
                         keyboardType="numeric"
